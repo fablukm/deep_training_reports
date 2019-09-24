@@ -1,0 +1,321 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[headheight=1.5cm,top=3cm,left=2cm,right=2cm]{geometry}
+\usepackage[scaled=0.8]{beramono}
+\usepackage{pdflscape}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{helvet}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\graphicspath{{images/}}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usepackage{stackengine}
+\newcommand\No[1][.13ex]{%
+  \setbox0=\hbox{\scalebox{.7}{o}}%
+  \setbox2=\hbox{N}%
+  N\kern-.05em\stackengine{\dimexpr\ht0-\ht2+#1}{\belowbaseline[-\ht2]{\copy0}}%
+    {\rule[-.13ex]{.7\wd0}{.13ex}}%
+    {U}{c}{F}{F}{L}%
+}
+
+\usepackage{pbox}
+%\usepackage{tikz, pgfplots}
+\usepackage{pgf,tikz,pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\definecolor{qqqqff}{rgb}{0,0,1}
+\definecolor{ffqqqq}{rgb}{1,0,0}
+\usepackage{color, colortbl}
+\usetikzlibrary{arrows,positioning}
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{10pt}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.0pt}
+\fancyhf{}
+\usepackage{lastpage}
+
+\newcommand{\doctitle}{Semantic Segmentation of Galilei Colour TopView images}
+\newcommand{\docauthor}{Fabian M\"uller}
+\newcommand{\docnr}{n/a}
+\newcommand{\docversion}{n/a}
+\newcommand{\doctempl}{n/a}
+
+\title{\doctitle}
+\author{\docauthor}
+
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+\usepackage{enumitem}
+
+\usepackage{listings}
+\input{../latex/header.tex}
+
+\newcommand{\dev}[1]{{\sc #1}}
+
+%#\usepackage{showkeys}
+\usepackage{longtable}
+\usepackage{siunitx}
+\usepackage{tabularx}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}} % linksbündig mit Breitenangabe
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}} % zentriert mit Breitenangabe
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}} % rechtsbündig mit Breitenangabe
+
+% %%% COLOURS FOR LAYERS
+% GREEN 81,168,50
+% RED Conv 168,50,95
+% BLUE Maxpool 50,58,168
+% PURPLE upsampling 87,50,168
+% RED Concatenate 168,58,50
+% Orange Activation 235,128,52
+% Turquoise BatchNorm 52,235,174
+% PURPLE Additive 174,52,235
+\definecolor{InputLayer}{RGB}{52, 220, 235} %light blue
+
+\definecolor{Conv2D}{RGB}{235, 101, 52} % orange/red
+\definecolor{Dense}{RGB}{235, 52, 55} %red
+\definecolor{BatchNormalization}{RGB}{235, 52, 140} %pink
+
+\definecolor{Activation}{RGB}{92, 52, 235} %blue
+\definecolor{MaxPooling2D}{RGB}{174, 52, 235} %purple
+\definecolor{UpSampling2D}{RGB}{52, 107, 235} %lighter blue
+
+\definecolor{Concatenate}{RGB}{81,168,50} %Green
+\definecolor{Add}{RGB}{50, 168, 121} % Blueish green
+% %%%%%%%%%%%%%%%%%%%%%%
+\setcounter{tocdepth}{2}
+\begin{document}
+
+%# TITLE
+$\,$\\[-2ex]
+\begin{flushright}
+    {\huge{\bf
+    \doctitle
+    }}\\[1ex]
+    {\large
+    \docauthor
+    }
+\end{flushright}
+%\frontpages{Function Author}{Author}{Function Reviewer}{Reviewer}{Function Release}{Release}
+\tableofcontents
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary}
+\begin{tabular}{rrrrrrrr}
+    \hline\\[-1.5ex]
+    \No{} & Model name & Pretrained & \#Parameters & \#Epochs & Batch size & Test Acc. & Training Acc. \\
+    \hline\\[-1.5ex]
+
+    %% for summary in summaries
+    \hyperref[training:\VAR{summary['model']['reportnumber']}]
+             {\VAR{summary['model']['reportnumber']}} &
+    \hyperref[model:\VAR{summary['model']['name']}]
+             {\VAR{summary['model']['name']}} &
+    \VAR{summary['model']['is_pretrained']} &
+    \num{\VAR{summary['model']['n_params']}} &
+    \VAR{summary['training']['epochs']}
+    %% if summary['model']['pretrained_epochs'] is defined
+    + \VAR{summary['model']['pretrained_epochs']}
+    %% endif
+    &
+    \VAR{summary['training']['batch_size']} &
+    \VAR{summary['training']['history']['val_categorical_accuracy_perc']} \% &
+    \VAR{summary['training']['history']['categorical_accuracy_perc']} \%
+    \\[4pt]
+    %% endfor
+    \hline
+\end{tabular}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Training reports}
+%% for summary in summaries
+    \subsection{Model \VAR{summary['model']['reportnumber']}: \VAR{summary['model']['name']}
+                \label{training:\VAR{summary['model']['reportnumber']}}}
+    %
+    \paragraph*{Training history} See Figure \ref{fig:results\VAR{summary['model']['reportnumber']}}.
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{.5\textwidth}
+            \VAR{summary['plots_tikz']['acc']}
+            \caption{Accuracy learning process for model \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+                        {\VAR{summary['model']['reportnumber']}}.}
+        \end{subfigure}%
+        \hfill%
+        \begin{subfigure}{.5\textwidth}
+            \VAR{summary['plots_tikz']['loss']}
+            \caption{Loss learning process for model \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+                        {\VAR{summary['model']['reportnumber']}}.}
+        \end{subfigure}
+        \par\bigskip
+        \begin{subfigure}{.5\textwidth}
+            \VAR{summary['plots_tikz']['lr']}
+            \caption{Learning rate per epoch for model \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+                        {\VAR{summary['model']['reportnumber']}}.}
+        \end{subfigure}%
+        \hfill%
+        \begin{subfigure}{.5\textwidth}
+            \VAR{summary['plots_tikz']['eval']}
+            \caption{Histogram Test set accuracies for model
+            \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+                        {\VAR{summary['model']['reportnumber']}}.}
+        \end{subfigure}
+        \caption{Training and evaluation metrics for model  \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+                    {\VAR{summary['model']['reportnumber']}}.
+                \label{fig:results\VAR{summary['model']['reportnumber']}}}
+    \end{figure}
+
+    \subsubsection*{Dataset}
+    \begin{description}
+        \item[Train-Test-Dev split:] {\it Training set:}
+        \VAR{summary['data']['samples']['train']['n_samples']}
+        (\VAR{summary['data']['samples']['train']['ratio_perc']} \%),
+        {\it Test set:}
+        \VAR{summary['data']['samples']['test']['n_samples']}
+        (\VAR{summary['data']['samples']['test']['ratio_perc']} \%),
+        {\it Dev set:}
+        \VAR{summary['data']['samples']['dev']['n_samples']}
+        (\VAR{summary['data']['samples']['dev']['ratio_perc']} \%)
+        \item[Image size] \VAR{summary['data']['image_size']}
+        \item[Augmentations]
+            \begin{enumerate}
+                \item Horizontal flip,
+                \item Vertical flip,
+                \item Rotation around centre by $\VAR{summary['data']['aug_rotangle']}^{\circ}$,
+                \item Random noise of type: \VAR{summary['data']['aug_noisetype']}.
+            \end{enumerate}
+        \item[Path to .pickle file] \VAR{summary['data']['path_pickle']}
+    \end{description}
+    %
+    \subsubsection*{Training}
+    \begin{description}
+        \item[Number of epochs] \VAR{summary['training']['epochs']}
+        \item[Optimiser] \VAR{summary['training']['optimizer'].capitalize()}
+        \item[Learning rate] \VAR{summary['training']['history']['lr'][0]}
+        \item[Loss] \VAR{summary['training']['loss'].capitalize()}
+        \item[Batch size] \VAR{summary['training']['batch_size']}
+        \item[Shuffle] \VAR{summary['training']['shuffle']}
+        \item[Training time] \VAR{summary['metadata']['training_time']}
+    \end{description}
+    %
+    \subsubsection*{Miscellaneous}
+    \begin{description}
+        \item[LED removal] {\it Region:} $x$ in \VAR{summary['data']['led_region'][:2]},
+                                         $y$ in \VAR{summary['data']['led_region'][-2:]}.
+                           {\it Threshold:} \VAR{summary['data']['led_threshold']}.
+                           {\it Replacement value:} \VAR{summary['data']['led_replace']}.
+    \end{description}
+    %
+    \subsubsection*{Platform}
+    \begin{description}
+        \item[Weights exported to path] \VAR{summary['model']['weights_path']}
+        \item[Device used] \VAR{summary['metadata']['training_device']['device_string']}
+        \item[CPU] \VAR{summary['metadata']['training_device']['cpu']['brand']},
+                   \VAR{summary['metadata']['training_device']['cpu']['arch']}
+        \item[Python Version] \VAR{summary['metadata']['training_device']['python_version']}
+        \item[Keras Version] \VAR{summary['metadata']['keras_version']} (Backend: \VAR{summary['metadata']['keras_backend']})
+        \item[Tensorflow Version] \VAR{summary['metadata']['tensorflow_version']}
+        \item[Timestamp] \VAR{summary['metadata']['starttime']}
+    \end{description}
+%% endfor
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Model Architectures}
+%% for model in model_list
+\subsection{\VAR{model['modelname']}
+            \label{model:\VAR{model['modelname']}}
+            }
+\paragraph{Used in \No{}:}
+    %% for k in model['model_idc'][:-1]
+    \hyperref[training:\VAR{summaries[k]['model']['reportnumber']}]
+             {\VAR{summaries[k]['model']['reportnumber']}},
+    %% endfor
+    \hyperref[training:\VAR{summaries[-1]['model']['reportnumber']}]
+             {\VAR{summaries[-1]['model']['reportnumber']}}
+\vspace{-2ex}
+%
+\paragraph{Model summary:}$\,$\\
+\begin{longtable}{rR{.22\textwidth}cL{.22\textwidth}rL{.22\textwidth}}
+    \hline\\[-1.5ex]
+    \No{} &
+    Layer (Type) &
+    Output shape &
+    Config &
+    \#Parameters &
+    Inbound layers\\
+    \hline\\
+    \endhead
+    %% for layer in summaries[model['model_idc'][0]]['model']['layers']
+        \VAR{layer['number']}
+        &
+        \color{\VAR{layer['layertype']}}{
+        \VAR{layer['name']}}
+        \color{\VAR{layer['layertype']}}{
+        (\VAR{layer['layertype']})}
+        &
+        \VAR{layer['output_shape']}
+        &
+        %% if layer['layertype'] == 'Conv2D'
+            {\bf Activation:} \VAR{layer['activation']} \newline
+            {\bf Kernel Size:} \VAR{layer['kernel_size']} \newline
+            {\bf Stride:} \VAR{layer['strides']} \newline
+            {\bf Dilation:} \VAR{layer['dilation_rate']} \newline
+            {\bf Padding:} \VAR{layer['padding']}
+        %% elif layer['layertype'] == 'MaxPooling2D'
+            {\bf Pool size:} \VAR{layer['pool_size']} \newline
+            {\bf Strides:} \VAR{layer['strides']} \newline
+            {\bf Padding:} \VAR{layer['padding']}
+        %% elif layer['layertype'] == 'UpSampling2D'
+            {\bf Interpolation:} \VAR{layer['interpolation']}  \newline
+            {\bf Scale factors:} \VAR{layer['scale_factors']}
+        %% elif layer['layertype'] == 'Concatenate'
+            {\bf Axis:} \VAR{layer['concat_axis']}
+        %% elif layer['layertype'] == 'BatchNormalization'
+            {\bf Momentum:} \VAR{layer['momentum']} \newline
+            {\bf Additive Offset:} \VAR{layer['center']} \newline
+            {\bf Scaling:} \VAR{layer['scale']} \newline
+            {\bf Axis:} \VAR{layer['axis']}
+        %% elif layer['layertype'] == 'Activation'
+            {\bf Activation:} \VAR{layer['activation']}
+        %% elif layer['layertype'] == 'Activation'
+            {\bf Activation:} \VAR{layer['activation']}
+        %% elif layer['layertype'] == 'InputLayer'
+        %% elif layer['layertype'] == 'Add'
+        %% else
+            Parameters of layers of type \VAR{layer['layertype']} not implemented.
+        %% endif
+        &
+        \num{\VAR{layer['n_params']}}
+        &
+        %% for in_layer in layer['inbound_layers'][:-1]
+            \color{\VAR{in_layer['layertype']}}{
+            \VAR{in_layer['name']}},
+        %% endfor
+        %% if layer['inbound_layers']|length
+        \color{\VAR{layer['inbound_layers'][-1]['layertype']}}{
+            \VAR{layer['inbound_layers'][-1]['name']}}
+        %%endif
+        \\
+        \hline\\[-1.5ex]
+    %% endfor
+\end{longtable}
+\newpage
+%% endfor
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

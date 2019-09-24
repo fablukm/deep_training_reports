@@ -1,0 +1,94 @@
+%%% DEFINE GREY BOX %%%
+\long\def\greybox#1{%
+     \newbox\contentbox%
+     \newbox\bkgdbox%
+     \setbox\contentbox\hbox to \hsize{%
+         \vtop{
+             \kern\columnsep
+             \hbox to \hsize{%
+                 \kern\columnsep%
+                 \advance\hsize by -2\columnsep%
+                 \setlength{\textwidth}{\hsize}%
+                 \vbox{
+                     \parskip=\baselineskip
+                     \parindent=0bp
+                     #1
+                 }%
+                 \kern\columnsep%
+             }%
+             \kern\columnsep%
+         }%
+     }%
+     \setbox\bkgdbox\vbox{
+         \pdfliteral{0.85 0.85 0.85 rg}
+         \hrule width  \wd\contentbox %
+                height \ht\contentbox %
+                depth  \dp\contentbox
+         \pdfliteral{0 0 0 rg}
+     }%
+     \wd\bkgdbox=0bp%
+     \vbox{\hbox to \hsize{\box\bkgdbox\box\contentbox}}%
+     \vskip\baselineskip%
+}
+
+%%% DEFINE HEADER ON EACH PAGE %%%
+\chead{\parbox[c]{.05\textwidth}{\hfill}\parbox[c]{.7\textwidth}{\hfil \bf \large \doctitle \hfil}
+        \parbox[c]{.15\textwidth}{\hfill\includegraphics[height=1cm]{../latex/logo.png}}\\[0.2cm]
+        \rule{\textwidth}{0.4pt} \\[0.1cm]
+       \parbox[c]{.05\textwidth}{\hfill}\parbox[c]{.7\textwidth}{\footnotesize
+           File: \doctitle.pdf \\[1pt]
+           \hfil Author: \docauthor \qquad Creation Date: \today\hfil}\parbox[c]{.15\textwidth}{$\,$\\[1pt]\hfill\footnotesize Page \thepage}
+       \\[-0.1cm] \rule{\textwidth}{0.4pt}
+}
+
+%%% DEFINE HEADER %%%
+\long\def\header{
+\greybox{\parbox{.22\textwidth}{Dok.~Nr.:}\parbox{.78\textwidth}{\docnr}\\
+\parbox{.22\textwidth}{Version:}\parbox{.78\textwidth}{\docversion}\\
+\parbox{.22\textwidth}{Vorlage:}\parbox{.78\textwidth}\doctempl}
+}
+
+%%% DEFINE TABLES %%%
+\definecolor{Black}{gray}{0}
+\newcommand{\SignatureTables}[6]{
+{\bf Release}\\
+
+\renewcommand{\arraystretch}{2}
+Author\\[.25cm]
+\begin{tabular}{|L{.3\textwidth}|L{.2\textwidth}|L{.2\textwidth}|L{.2\textwidth}|}
+    \rowcolor{Black}
+    {\color{white} Function} & {\color{white} Name} & {\color{white} Date} & {\color{white} Signature}\\
+    #1 & #2 & &\\\hline
+\end{tabular}
+
+Review\\[.25cm]
+\begin{tabular}{|L{.3\textwidth}|L{.2\textwidth}|L{.2\textwidth}|L{.2\textwidth}|}
+    \rowcolor{Black}
+    {\color{white} Function} & {\color{white} Name} & {\color{white} Date} & {\color{white} Signature}\\
+    #3 & #4 & &\\\hline
+\end{tabular}
+
+Release\\[.25cm]
+\begin{tabular}{|L{.3\textwidth}|L{.2\textwidth}|L{.2\textwidth}|L{.2\textwidth}|}
+    \rowcolor{Black}
+    {\color{white} Function} & {\color{white} Name} & {\color{white} Date} & {\color{white} Signature}\\
+    #5 & #6 & &\\\hline
+\end{tabular}
+}
+%%% DEFINE FRONTPAGES %%%
+\newcommand{\frontpages}[7]{
+\header
+\vspace{2cm}
+%\begin{center}
+    {\Large{\bf \doctitle}}
+%\end{center}
+\vfill
+
+\SignatureTables{#1}{#2}{#3}{#4}{#5}{#6}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+}
