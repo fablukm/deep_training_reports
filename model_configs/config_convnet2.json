@@ -1,0 +1,33 @@
+{
+"data": {
+    "name": "MNIST",
+    "image_size": [28, 28]
+},
+"model": {
+    "name": "ConvNet2layers",
+    "filter_sizes": [32, 64],
+    "dense_units": 128,
+    "dropout_rates": [0.25, 0.5],
+    "n_classes": 10,
+    "is_saved": true,
+    "model_folder": "weights"
+},
+"training": {
+    "optimizer": "adam",
+    "optim_config": {
+            "learning_rate": 0.01
+        },
+    "loss": "categorical_crossentropy",
+    "metrics": ["accuracy"],
+    "n_epochs": 10,
+    "batch_size": 128,
+    "shuffle": true
+},
+"augmentations": {
+},
+"report":{
+    "export_folder": "training_logs",
+    "datetimeformat": "%d%m%Y_%Hh%M",
+    "datetimeformat_report": "%d.%m.%Y at %H:%M"
+}
+}
