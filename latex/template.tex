@@ -1,9 +1,6 @@
 \documentclass[10pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[headheight=1.5cm,top=3cm,left=2cm,right=2cm]{geometry}
-\usepackage[scaled=0.8]{beramono}
-\usepackage{pdflscape}
-\usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{helvet}
 \usepackage{longtable}
@@ -22,6 +19,7 @@
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
+%# For the No. sign
 \usepackage{stackengine}
 \newcommand\No[1][.13ex]{%
   \setbox0=\hbox{\scalebox{.7}{o}}%
@@ -31,14 +29,15 @@
     {U}{c}{F}{F}{L}%
 }
 
+%# for plots
 \usepackage{pbox}
-%\usepackage{tikz, pgfplots}
 \usepackage{pgf,tikz,pgfplots}
 \pgfplotsset{compat=1.15}
 \usepackage{mathrsfs}
 \usetikzlibrary{arrows}
 \definecolor{qqqqff}{rgb}{0,0,1}
 \definecolor{ffqqqq}{rgb}{1,0,0}
+
 \usepackage{color, colortbl}
 \usetikzlibrary{arrows,positioning}
 \renewcommand{\familydefault}{\sfdefault}
@@ -47,7 +46,6 @@
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{0.0pt}
 \fancyhf{}
-\usepackage{lastpage}
 
 \newcommand{\doctitle}{\VAR{doc['title']}}
 \newcommand{\docauthor}{\VAR{doc['author']}}
@@ -63,24 +61,14 @@
 
 \newcommand{\dev}[1]{{\sc #1}}
 
-%#\usepackage{showkeys}
-\usepackage{longtable}
 \usepackage{siunitx}
 \usepackage{tabularx}
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}} % linksbündig mit Breitenangabe
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}} % zentriert mit Breitenangabe
-\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}} % rechtsbündig mit Breitenangabe
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
 
-% %%% COLOURS FOR LAYERS
-% GREEN 81,168,50
-% RED Conv 168,50,95
-% BLUE Maxpool 50,58,168
-% PURPLE upsampling 87,50,168
-% RED Concatenate 168,58,50
-% Orange Activation 235,128,52
-% Turquoise BatchNorm 52,235,174
-% PURPLE Additive 174,52,235
-\definecolor{InputLayer}{RGB}{52, 220, 235} %light blue
+%# %%% COLOURS FOR LAYERS %%%
+\definecolor{InputLayer}{RGB}{44, 189, 201} %light blue
 
 \definecolor{Conv2D}{RGB}{235, 101, 52} % orange/red
 \definecolor{Dense}{RGB}{235, 52, 55} %red
@@ -94,7 +82,7 @@
 \definecolor{Flatten}{RGB}{50, 168, 70} %Green
 \definecolor{Concatenate}{RGB}{81,168,50} %Green
 \definecolor{Add}{RGB}{50, 168, 121} % Blueish green
-% %%%%%%%%%%%%%%%%%%%%%%
+%# %%%%%%%%%%%%%%%%%%%%%%
 \setcounter{tocdepth}{2}
 \begin{document}
 
@@ -114,7 +102,7 @@ $\,$\\[-2ex]
 \section{Summary}
 \begin{tabular}{rrrrrrrr}
     \hline\\[-1.5ex]
-    \No{} & Model name & Pretrained & \#Parameters & \#Epochs & Batch size & Test Acc. & Training Acc. \\
+    \No{} & Model name & \#Parameters & \#Epochs & Batch size & Test Acc. & Training Acc. \\
     \hline\\[-1.5ex]
 
     %% for summary in summaries
@@ -122,7 +110,6 @@ $\,$\\[-2ex]
              {\VAR{summary['model']['reportnumber']}} &
     \hyperref[model:\VAR{summary['model']['name']}]
              {\VAR{summary['model']['name']}} &
-    \VAR{summary['model']['is_pretrained']} &
     \num{\VAR{summary['model']['n_params']}} &
     \VAR{summary['training']['epochs']}
     %% if summary['model']['pretrained_epochs'] is defined
@@ -141,8 +128,10 @@ $\,$\\[-2ex]
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Training reports}
 %% for summary in summaries
-    \subsection{Model \VAR{summary['model']['reportnumber']}: \VAR{summary['model']['name']}
-                \label{training:\VAR{summary['model']['reportnumber']}}}
+    \subsection{Model \VAR{summary['model']['reportnumber']}:
+                        \VAR{summary['model']['name']}
+                \label{training:\VAR{summary['model']['reportnumber']}}
+                }
     %
     \paragraph*{Training history} See Figure \ref{fig:results\VAR{summary['model']['reportnumber']}}.
     \begin{figure}[H]
@@ -186,9 +175,14 @@ $\,$\\[-2ex]
     \subsubsection*{Training}
     \begin{description}
         \item[Number of epochs] \VAR{summary['training']['epochs']}
-        \item[Optimizer] \VAR{summary['training']['optimizer'].capitalize()} \\
-            \VAR{summary['training']['optim_config']}\\
-        \item[Learning rate] \VAR{summary['training']['history']['lr'][0]}
+        \item[Optimizer] \VAR{summary['training']['optimizer']}
+
+            \begin{tabular}{rl}
+                %% for key in summary['training']['optim_config'].keys()
+                    {\bf \VAR{key}} & \VAR{summary['training']['optim_config'][key]} \\
+                %% endfor
+            \end{tabular}
+        %#\item[Learning rate] \VAR{summary['training']['history']['lr'][0]}
         \item[Loss] \VAR{summary['training']['loss'].capitalize()}
         \item[Batch size] \VAR{summary['training']['batch_size']}
         \item[Shuffle] \VAR{summary['training']['shuffle']}

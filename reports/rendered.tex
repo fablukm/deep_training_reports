@@ -49,8 +49,8 @@
 \fancyhf{}
 \usepackage{lastpage}
 
-\newcommand{\doctitle}{TITLE}
-\newcommand{\docauthor}{AUTHOR}
+\newcommand{\doctitle}{MNIST Training}
+\newcommand{\docauthor}{Document Author}
 
 \title{\doctitle}
 \author{\docauthor}
@@ -126,32 +126,8 @@ $\,$\\[-2ex]
     1
     &
     128 &
-    85.82 \% &
-    86.78 \%
-    \\[4pt]
-    \hyperref[training:2]
-             {2} &
-    \hyperref[model:MLP2layers]
-             {MLP2layers} &
-     &
-    \num{669706} &
-    1
-    &
-    128 &
-    86.99 \% &
-    86.67 \%
-    \\[4pt]
-    \hyperref[training:3]
-             {3} &
-    \hyperref[model:MLP2layers]
-             {MLP2layers} &
-     &
-    \num{669706} &
-    1
-    &
-    128 &
-    90.2 \% &
-    86.71 \%
+    89.83 \% &
+    88.29 \%
     \\[4pt]
     \hline
 \end{tabular}
@@ -194,12 +170,12 @@ ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.867783333365122
+1 0.882916666634878
 };
 \addlegendentry{Training Accuracy}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.8582
+1 0.8983
 };
 \addlegendentry{Test Accuracy}
 \addplot [line width=1.0pt, black, dotted, forget plot]
@@ -237,18 +213,18 @@ xtick style={color=black},
 xtick={1},
 y grid style={white!69.01960784313725!black},
 ylabel={Loss},
-ymin=0.3, ymax=0.627594272327423,
+ymin=0.18, ymax=0.453106989803314,
 ytick style={color=black},
-ytick={0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65}
+ytick={0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.461344637664159
+1 0.405979485925039
 };
 \addlegendentry{Training Loss}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.482764824867249
+1 0.348543838310242
 };
 \addlegendentry{Test Loss}
 \end{axis}
@@ -317,365 +293,17 @@ table {%
     \subsubsection*{Training}
     \begin{description}
         \item[Number of epochs] 1
-        \item[Optimizer] Rmsprop \\
-            0.01\\
-        \item[Learning rate] 0.001
-        \item[Loss] Categorical crossentropy
-        \item[Batch size] 128
-        \item[Shuffle] Yes
-        \item[Training time] 4 sec
-    \end{description}
-    %
-    \subsubsection*{Platform}
-    \begin{description}
-        \item[Weights exported to path] weights\textbackslash MLP2layers\_1ep\_MNIST.h5
-        \item[Device used] GPU (GeForce GTX 1060 6GB)
-        \item[CPU] Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz,
-                   X86\_64
-        \item[Python Version] 3.7.2.final.0 (64 bit)
-        \item[Keras Version] 2.2.5 (Backend: tensorflow)
-        \item[Tensorflow Version] 1.14.0
-        \item[Timestamp] 25.09.2019 at 13:50
-    \end{description}
-    \subsection{Model 2: MLP2layers
-                \label{training:2}}
-    %
-    \paragraph*{Training history} See Figure \ref{fig:results2}.
-    \begin{figure}[H]
-        \centering
-        \begin{subfigure}{.5\textwidth}
-            % This file was created by tikzplotlib v0.8.2.
-\begin{tikzpicture}
+        \item[Optimizer] adam
 
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+            \begin{tabular}{rl}
+                    {\bf Learning Rate} & 0.0010000000474974513 \\
+                    {\bf Beta 1} & 0.8999999761581421 \\
+                    {\bf Beta 2} & 0.9990000128746033 \\
+                    {\bf Decay} & 0.0 \\
+                    {\bf Epsilon} & 1e-07 \\
+                    {\bf Amsgrad} & False \\
+            \end{tabular}
 
-\begin{axis}[
-font=\small,
-legend cell align={left},
-legend style={at={(0.97,0.03)}, anchor=south east, draw=white!80.0!black},
-minor xtick={},
-minor ytick={},
-tick align=outside,
-tick pos=both,
-title={{\bf Progression of Evaluation metrics}},
-x grid style={white!69.01960784313725!black},
-xlabel={Epoch},
-xmin=0.5, xmax=1.5,
-xtick style={color=black},
-xtick={1},
-y grid style={white!69.01960784313725!black},
-ylabel={Test Accuracy},
-ymin=0.72, ymax=1.025,
-ytick style={color=black},
-ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
-]
-\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
-table {%
-1 0.866733333365122
-};
-\addlegendentry{Training Accuracy}
-\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
-table {%
-1 0.8699
-};
-\addlegendentry{Test Accuracy}
-\addplot [line width=1.0pt, black, dotted, forget plot]
-table {%
-0.5 1
-1.5 1
-};
-\end{axis}
-
-\end{tikzpicture}
-            \caption{Accuracy learning process for model \protect\hyperref[training:2]
-                        {2}.}
-        \end{subfigure}%
-        \hfill%
-        \begin{subfigure}{.5\textwidth}
-            % This file was created by tikzplotlib v0.8.2.
-\begin{tikzpicture}
-
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
-
-\begin{axis}[
-font=\small,
-legend cell align={left},
-legend style={draw=white!80.0!black},
-minor xtick={},
-minor ytick={},
-tick align=outside,
-tick pos=both,
-title={{\bf Progression of loss function}},
-x grid style={white!69.01960784313725!black},
-xlabel={Epoch},
-xmin=0.5, xmax=1.5,
-xtick style={color=black},
-xtick={1},
-y grid style={white!69.01960784313725!black},
-ylabel={Loss},
-ymin=0.24, ymax=0.568110058338642,
-ytick style={color=black},
-ytick={0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6}
-]
-\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
-table {%
-1 0.466604991785685
-};
-\addlegendentry{Training Loss}
-\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
-table {%
-1 0.437007737183571
-};
-\addlegendentry{Test Loss}
-\end{axis}
-
-\end{tikzpicture}
-            \caption{Loss learning process for model \protect\hyperref[training:2]
-                        {2}.}
-        \end{subfigure}
-        \par\bigskip
-        \begin{subfigure}{.5\textwidth}
-            % This file was created by tikzplotlib v0.8.2.
-\begin{tikzpicture}
-
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-
-\begin{axis}[
-font=\small,
-legend cell align={left},
-legend style={draw=white!80.0!black},
-minor xtick={},
-minor ytick={},
-tick align=outside,
-tick pos=both,
-title={{\bf Progression of Learning rate}},
-x grid style={white!69.01960784313725!black},
-xlabel={Epoch},
-xmin=0.5, xmax=1.5,
-xtick style={color=black},
-xtick={1},
-y grid style={white!69.01960784313725!black},
-ylabel={Learning Rate},
-ymin=0, ymax=0.0013,
-ytick style={color=black},
-ytick={0,0.0002,0.0004,0.0006,0.0008,0.001,0.0012,0.0014}
-]
-\addplot [line width=1.0pt, color0, dashed, mark=*, mark size=2, mark options={solid}]
-table {%
-1 0.001
-};
-\addlegendentry{Learning Rate}
-\end{axis}
-
-\end{tikzpicture}
-            \caption{Learning rate per epoch for model \protect\hyperref[training:2]
-                        {2}.}
-        \end{subfigure}%
-        \caption{Training and evaluation metrics for model  \protect\hyperref[training:2]
-                    {2}.
-                \label{fig:results2}}
-    \end{figure}
-
-    \subsubsection*{Dataset}
-    \begin{description}
-        \item[Name] MNIST
-        \item[Train-Test-Dev split:] {\it Training set:}
-        60000,
-        {\it Test set:}
-        10000,
-        {\it Dev set:}
-        0,
-        \item[Image size] [28, 28]
-
-
-    \end{description}
-    %
-    \subsubsection*{Training}
-    \begin{description}
-        \item[Number of epochs] 1
-        \item[Optimizer] Rmsprop \\
-            0.01\\
-        \item[Learning rate] 0.001
-        \item[Loss] Categorical crossentropy
-        \item[Batch size] 128
-        \item[Shuffle] Yes
-        \item[Training time] 4 sec
-    \end{description}
-    %
-    \subsubsection*{Platform}
-    \begin{description}
-        \item[Weights exported to path] weights\textbackslash MLP2layers\_1ep\_MNIST.h5
-        \item[Device used] GPU (GeForce GTX 1060 6GB)
-        \item[CPU] Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz,
-                   X86\_64
-        \item[Python Version] 3.7.2.final.0 (64 bit)
-        \item[Keras Version] 2.2.5 (Backend: tensorflow)
-        \item[Tensorflow Version] 1.14.0
-        \item[Timestamp] 25.09.2019 at 13:52
-    \end{description}
-    \subsection{Model 3: MLP2layers
-                \label{training:3}}
-    %
-    \paragraph*{Training history} See Figure \ref{fig:results3}.
-    \begin{figure}[H]
-        \centering
-        \begin{subfigure}{.5\textwidth}
-            % This file was created by tikzplotlib v0.8.2.
-\begin{tikzpicture}
-
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
-
-\begin{axis}[
-font=\small,
-legend cell align={left},
-legend style={at={(0.97,0.03)}, anchor=south east, draw=white!80.0!black},
-minor xtick={},
-minor ytick={},
-tick align=outside,
-tick pos=both,
-title={{\bf Progression of Evaluation metrics}},
-x grid style={white!69.01960784313725!black},
-xlabel={Epoch},
-xmin=0.5, xmax=1.5,
-xtick style={color=black},
-xtick={1},
-y grid style={white!69.01960784313725!black},
-ylabel={Test Accuracy},
-ymin=0.72, ymax=1.025,
-ytick style={color=black},
-ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
-]
-\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
-table {%
-1 0.867083333333333
-};
-\addlegendentry{Training Accuracy}
-\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
-table {%
-1 0.902
-};
-\addlegendentry{Test Accuracy}
-\addplot [line width=1.0pt, black, dotted, forget plot]
-table {%
-0.5 1
-1.5 1
-};
-\end{axis}
-
-\end{tikzpicture}
-            \caption{Accuracy learning process for model \protect\hyperref[training:3]
-                        {3}.}
-        \end{subfigure}%
-        \hfill%
-        \begin{subfigure}{.5\textwidth}
-            % This file was created by tikzplotlib v0.8.2.
-\begin{tikzpicture}
-
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
-
-\begin{axis}[
-font=\small,
-legend cell align={left},
-legend style={draw=white!80.0!black},
-minor xtick={},
-minor ytick={},
-tick align=outside,
-tick pos=both,
-title={{\bf Progression of loss function}},
-x grid style={white!69.01960784313725!black},
-xlabel={Epoch},
-xmin=0.5, xmax=1.5,
-xtick style={color=black},
-xtick={1},
-y grid style={white!69.01960784313725!black},
-ylabel={Loss},
-ymin=0.18, ymax=0.453740831608772,
-ytick style={color=black},
-ytick={0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5}
-]
-\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
-table {%
-1 0.465589972003301
-};
-\addlegendentry{Training Loss}
-\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
-table {%
-1 0.349031408929825
-};
-\addlegendentry{Test Loss}
-\end{axis}
-
-\end{tikzpicture}
-            \caption{Loss learning process for model \protect\hyperref[training:3]
-                        {3}.}
-        \end{subfigure}
-        \par\bigskip
-        \begin{subfigure}{.5\textwidth}
-            % This file was created by tikzplotlib v0.8.2.
-\begin{tikzpicture}
-
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-
-\begin{axis}[
-font=\small,
-legend cell align={left},
-legend style={draw=white!80.0!black},
-minor xtick={},
-minor ytick={},
-tick align=outside,
-tick pos=both,
-title={{\bf Progression of Learning rate}},
-x grid style={white!69.01960784313725!black},
-xlabel={Epoch},
-xmin=0.5, xmax=1.5,
-xtick style={color=black},
-xtick={1},
-y grid style={white!69.01960784313725!black},
-ylabel={Learning Rate},
-ymin=0, ymax=0.0013,
-ytick style={color=black},
-ytick={0,0.0002,0.0004,0.0006,0.0008,0.001,0.0012,0.0014}
-]
-\addplot [line width=1.0pt, color0, dashed, mark=*, mark size=2, mark options={solid}]
-table {%
-1 0.001
-};
-\addlegendentry{Learning Rate}
-\end{axis}
-
-\end{tikzpicture}
-            \caption{Learning rate per epoch for model \protect\hyperref[training:3]
-                        {3}.}
-        \end{subfigure}%
-        \caption{Training and evaluation metrics for model  \protect\hyperref[training:3]
-                    {3}.
-                \label{fig:results3}}
-    \end{figure}
-
-    \subsubsection*{Dataset}
-    \begin{description}
-        \item[Name] MNIST
-        \item[Train-Test-Dev split:] {\it Training set:}
-        60000,
-        {\it Test set:}
-        10000,
-        {\it Dev set:}
-        0,
-        \item[Image size] [28, 28]
-
-
-    \end{description}
-    %
-    \subsubsection*{Training}
-    \begin{description}
-        \item[Number of epochs] 1
-        \item[Optimizer] Rmsprop \\
-            0.01\\
-        \item[Learning rate] 0.001
         \item[Loss] Categorical crossentropy
         \item[Batch size] 128
         \item[Shuffle] Yes
@@ -691,7 +319,7 @@ table {%
         \item[Python Version] 3.7.2.final.0 (64 bit)
         \item[Keras Version] 2.2.5 (Backend: tensorflow)
         \item[Tensorflow Version] 1.14.0
-        \item[Timestamp] 25.09.2019 at 13:53
+        \item[Timestamp] 25.09.2019 at 15:16
     \end{description}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
@@ -702,11 +330,7 @@ table {%
             }
 \paragraph{Used in \No{}:}
     \hyperref[training:1]
-             {1},
-    \hyperref[training:2]
-             {2},
-    \hyperref[training:3]
-             {3}
+             {1}
 \vspace{-2ex}
 %
 \paragraph{Model summary:}$\,$\\

@@ -22,6 +22,16 @@ latex_jinja_env = jinja2.Environment(
     autoescape=False,
     loader=jinja2.FileSystemLoader('./latex'))
 
+def _optimizer_names(keyword):
+    dict = {'sgd': "Stochastic Gradient Descent",
+            'rmsprop': "RMSProp ",
+            'adagrad': "AdaGrad (Duchi et al. 2011)",
+            'adadelta': "ADADELTA (Zeiler, 2012)",
+            'adam': "Adam (Kingma et al., 2015)",
+            'adamax': "AdaMax (Kingma et al., 2015)",
+            'nadam': "Nadam (Nesterov-Adam), Dozat, 2016"}
+    return dict[keyword]
+
 
 def get_tikz_strings(model_dict, do_hist=True):
     epochs = [ep+1 for ep in list(range(model_dict['training']['epochs']))]
@@ -172,13 +182,13 @@ def make_reports(json_dir, doc, template_name='template.tex', out_dir='./reports
         model_dict['training']['history']['accuracy_perc'] = str(round(
             100*float(model_dict['training']['history']['acc'][-1]), 2))
 
-        # correct in case of early stopping
+        # correct n_epochs in case of early stopping
         model_dict['training']['epochs'] = len(model_dict['training']['history']['loss'])
 
         # boolean to yes/no string
         model_dict['training']['shuffle'] = "Yes" if model_dict['training']['shuffle'] else "No"
 
-        # add type to inbound layers
+        # add layertype to inbound layers to enable colouring of inbound layers
         layerno = 0
         for layer in model_dict['model']['layers']:
             layer['number'] = '' if layer['layertype']=='Activation' else layerno
@@ -193,11 +203,11 @@ def make_reports(json_dir, doc, template_name='template.tex', out_dir='./reports
                 layer['inbound_layers'].append(in_dict)
             layerno = layerno if layer['layertype']=='Activation' else layerno+1
 
-        # layer names
+        # layer names formatting
         for layer in model_dict['model']['layers']:
             layer['name'] = layer['name'].replace('_', '\_').strip()
 
-        # loss format
+        # loss formatting
         model_dict['training']['loss'] = model_dict['training']['loss'].replace(
             '_', ' ')
 
@@ -213,8 +223,17 @@ def make_reports(json_dir, doc, template_name='template.tex', out_dir='./reports
             model_dict['model']['weights_path'] = 'Weights not saved'
 
         # make optimizer config latex-friendly
+        temp = {}
         for key in model_dict['training']['optim_config'].keys():
-            model_dict['training']['optim_config'] = str_to_latex(str(model_dict['training']['optim_config'][key]))
+            new_key = 'Learning Rate' if key=='lr' else key.replace('_', ' ').capitalize()
+            temp[new_key] = model_dict['training']['optim_config'][key]
+        model_dict['training']['optim_config'] = temp
+
+        # rename optimizer
+        try:
+            model_dict['training']['optimizer'] = _optimizer_names(model_dict['training']['optimizer'])
+        except KeyError:
+            pass
 
         # datetime
         timestamp = datetime.strptime(
@@ -274,5 +293,5 @@ if __name__ == '__main__':
     # rendered = templ.render(model=model)
     # compile_tex(rendered, './reports')
 
-    json_dir= r'D:\code_d\deep_training_reports\jsons'
+    json_dir= r'D:\code_d\deep_training_reports\training_logs'
     ms, un = make_reports(json_dir, doc={'title':'TITLE', 'author':'AUTHOR'})

@@ -61,5 +61,5 @@ class Config(object):
 
 if __name__ == '__main__':
     print('LOADED CONFIG FILE TO OBJECT:\n')
-    config = Config('./configs/config_convnet2.json')
+    config = Config('./model_configs/config_convnet2.json')
     config.print()

@@ -13,8 +13,15 @@ import cpuinfo
 import load_config
 #from dataset.dataset import BatchLoader
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
+def _optimizer_loader(keyword):
+    dict = {'sgd': keras.optimizers.SGD,
+            'rmsprop': keras.optimizers.RMSprop,
+            'adagrad': keras.optimizers.Adagrad,
+            'adadelta': keras.optimizers.Adadelta,
+            'adam': keras.optimizers.Adam,
+            'adamax': keras.optimizers.Adamax,
+            'nadam': keras.optimizers.Nadam}
+    return dict[keyword]
 
 class NNModel(object):
     def __init__(self, dataset, model, config):
@@ -23,21 +30,23 @@ class NNModel(object):
         self.config = config
 
     def train(self):
+        # get optimizer
+        try:
+            optimizer = _optimizer_loader(self.config['training']['optimizer'])(**self.config['training']['optim_config'])
+        except KeyError:
+            raise NotImplementedError('Optimizer {} has not yet been implemented in nn_model/_optimizer_loader'.format(self.config['training']['optimizer']))
         # compile model
         self.model.compile(optimizer=self.config['training']['optimizer'],
                            loss=self.config['training']['loss'],
                            metrics=self.config['training']['metrics'])
 
+        # Load the dataset
+        self._get_datasets()
+
         # TRAINING
         #callbacks
         #TODO: make configurable
         reduce_lr = ReduceLROnPlateau(monitor='val_acc', patience=2)
-
-        # get optimizer
-        #if self.config['training']['optimizer']
-
-        # Load the dataset
-        self._get_datasets()
 
         now = datetime.now()
         self.training_history = \
@@ -138,7 +147,8 @@ class NNModel(object):
         # data related to model training
         training_dict = {'epochs': self.config['training']['n_epochs'],
                          'optimizer': self.config['training']['optimizer'],
-                         'optim_config': self.config['training']['optim_config'],
+                         'optim_config_spec': self.config['training']['optim_config'],
+                         'optim_config': self.model.optimizer.get_config(),
                          'loss': self.config['training']['loss'],
                          'metrics': self.config['training']['metrics'],
                          'batch_size': self.config['training']['batch_size'],

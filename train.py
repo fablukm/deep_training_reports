@@ -27,7 +27,8 @@ def train(config):
     return net
 
 if __name__=='__main__':
-    json_folder = './jsons'
+    json_folder = './training_logs'
+    config_folder = './configs'
     doc = {'title': 'MNIST Training', 'author': 'Document Author'}
     for configfile in ['./configs/config_mlp2.json']:
         print('importing from {}...'.format(configfile))
