@@ -13,7 +13,6 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
-\graphicspath{{images/}}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{float}
 \usepackage{fancyhdr}
@@ -50,11 +49,8 @@
 \fancyhf{}
 \usepackage{lastpage}
 
-\newcommand{\doctitle}{Semantic Segmentation of Galilei Colour TopView images}
-\newcommand{\docauthor}{Fabian M\"uller}
-\newcommand{\docnr}{n/a}
-\newcommand{\docversion}{n/a}
-\newcommand{\doctempl}{n/a}
+\newcommand{\doctitle}{\VAR{doc['title']}}
+\newcommand{\docauthor}{\VAR{doc['author']}}
 
 \title{\doctitle}
 \author{\docauthor}
@@ -64,7 +60,6 @@
 \usepackage{enumitem}
 
 \usepackage{listings}
-\input{../latex/header.tex}
 
 \newcommand{\dev}[1]{{\sc #1}}
 
@@ -92,9 +87,11 @@
 \definecolor{BatchNormalization}{RGB}{235, 52, 140} %pink
 
 \definecolor{Activation}{RGB}{92, 52, 235} %blue
+\definecolor{Dropout}{RGB}{50, 81, 168} %blue
 \definecolor{MaxPooling2D}{RGB}{174, 52, 235} %purple
 \definecolor{UpSampling2D}{RGB}{52, 107, 235} %lighter blue
 
+\definecolor{Flatten}{RGB}{50, 168, 70} %Green
 \definecolor{Concatenate}{RGB}{81,168,50} %Green
 \definecolor{Add}{RGB}{50, 168, 121} % Blueish green
 % %%%%%%%%%%%%%%%%%%%%%%
@@ -111,7 +108,7 @@ $\,$\\[-2ex]
     \docauthor
     }
 \end{flushright}
-%\frontpages{Function Author}{Author}{Function Reviewer}{Reviewer}{Function Release}{Release}
+
 \tableofcontents
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Summary}
@@ -133,8 +130,8 @@ $\,$\\[-2ex]
     %% endif
     &
     \VAR{summary['training']['batch_size']} &
-    \VAR{summary['training']['history']['val_categorical_accuracy_perc']} \% &
-    \VAR{summary['training']['history']['categorical_accuracy_perc']} \%
+    \VAR{summary['training']['history']['val_accuracy_perc']} \% &
+    \VAR{summary['training']['history']['accuracy_perc']} \%
     \\[4pt]
     %% endfor
     \hline
@@ -167,13 +164,6 @@ $\,$\\[-2ex]
             \caption{Learning rate per epoch for model \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
                         {\VAR{summary['model']['reportnumber']}}.}
         \end{subfigure}%
-        \hfill%
-        \begin{subfigure}{.5\textwidth}
-            \VAR{summary['plots_tikz']['eval']}
-            \caption{Histogram Test set accuracies for model
-            \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
-                        {\VAR{summary['model']['reportnumber']}}.}
-        \end{subfigure}
         \caption{Training and evaluation metrics for model  \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
                     {\VAR{summary['model']['reportnumber']}}.
                 \label{fig:results\VAR{summary['model']['reportnumber']}}}
@@ -181,43 +171,28 @@ $\,$\\[-2ex]
 
     \subsubsection*{Dataset}
     \begin{description}
+        \item[Name] \VAR{summary['data']['name']}
         \item[Train-Test-Dev split:] {\it Training set:}
-        \VAR{summary['data']['samples']['train']['n_samples']}
-        (\VAR{summary['data']['samples']['train']['ratio_perc']} \%),
+        \VAR{summary['data']['samples']['train']['n_samples']},
         {\it Test set:}
-        \VAR{summary['data']['samples']['test']['n_samples']}
-        (\VAR{summary['data']['samples']['test']['ratio_perc']} \%),
+        \VAR{summary['data']['samples']['test']['n_samples']},
         {\it Dev set:}
-        \VAR{summary['data']['samples']['dev']['n_samples']}
-        (\VAR{summary['data']['samples']['dev']['ratio_perc']} \%)
+        \VAR{summary['data']['samples']['dev']['n_samples']},
         \item[Image size] \VAR{summary['data']['image_size']}
-        \item[Augmentations]
-            \begin{enumerate}
-                \item Horizontal flip,
-                \item Vertical flip,
-                \item Rotation around centre by $\VAR{summary['data']['aug_rotangle']}^{\circ}$,
-                \item Random noise of type: \VAR{summary['data']['aug_noisetype']}.
-            \end{enumerate}
-        \item[Path to .pickle file] \VAR{summary['data']['path_pickle']}
+        %#\item[Augmentations]
+        %#\item[Path to .pickle file] \VAR{summary['data']['path_pickle']}
     \end{description}
     %
     \subsubsection*{Training}
     \begin{description}
         \item[Number of epochs] \VAR{summary['training']['epochs']}
-        \item[Optimiser] \VAR{summary['training']['optimizer'].capitalize()}
+        \item[Optimizer] \VAR{summary['training']['optimizer'].capitalize()} \\
+            \VAR{summary['training']['optim_config']}\\
         \item[Learning rate] \VAR{summary['training']['history']['lr'][0]}
         \item[Loss] \VAR{summary['training']['loss'].capitalize()}
         \item[Batch size] \VAR{summary['training']['batch_size']}
         \item[Shuffle] \VAR{summary['training']['shuffle']}
         \item[Training time] \VAR{summary['metadata']['training_time']}
-    \end{description}
-    %
-    \subsubsection*{Miscellaneous}
-    \begin{description}
-        \item[LED removal] {\it Region:} $x$ in \VAR{summary['data']['led_region'][:2]},
-                                         $y$ in \VAR{summary['data']['led_region'][-2:]}.
-                           {\it Threshold:} \VAR{summary['data']['led_threshold']}.
-                           {\it Replacement value:} \VAR{summary['data']['led_replace']}.
     \end{description}
     %
     \subsubsection*{Platform}

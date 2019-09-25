@@ -1,117 +1,91 @@
-from models.layers import *
-import keras
-import sys
+from keras import layers, models
 import inspect
-import os
+import sys
 
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-# 0 = all messages are logged (default behavior)
-# 1 = INFO messages are not printed
-# 2 = INFO and WARNING messages are not printed
-# 3 = INFO, WARNING, and ERROR messages are not printed
-
-def unet_softmax(config):
+def convnet2(config):
     '''
-    unet(config)
-
-    Implementation of Unet with four downsampling and upsampling blocks,
-    respectively. Bottleneck and
+    Implementation of a simple Convnet for MNIST classification
+    INPUTS: config: Config object
+            needs to contain fields:
+                config['data']['image_size']: image size. MNIST: (28, 28)
+                config['data']['filter_sizes']: At least two filter sizes (int)
+                config['model']['dense_units']: Per hidden layer, number of neurons
+                config['model']['dropout_rates']: Dropout rate per hidden layer
+                config['model']['n_classes']: Number of output classes. MNIST: 10.
+                config['data']['name']: Name
     '''
-    filter_sizes = config.model['filter_sizes']
-    image_size = config.data['image_size']
-    n_classes = config.data['n_classes']
-    inputs = keras.layers.Input((image_size[0], image_size[1], 3))
+    # Load parameters from config
+    image_size = config['data']['image_size']
+    filter_sizes = config['model']['filter_sizes']
+    dropout_rates = config['model']['dropout_rates']
+    dense_units = config['model']['dense_units']
+    n_classes = config['model']['n_classes']
+    model_name = config['model']['name']
 
-    p0 = inputs
-    c1, p1 = block_downsampling(p0, filter_sizes[0])  # 128 -> 64
-    c2, p2 = block_downsampling(p1, filter_sizes[1])  # 64 -> 32
-    c3, p3 = block_downsampling(p2, filter_sizes[2])  # 32 -> 16
-    c4, p4 = block_downsampling(p3, filter_sizes[3])  # 16 -> 8
+    # assert config to be valid
+    assert len(filter_sizes) >= 2, "More filters need to be specified in model {}".format(
+        model_name)
+    assert len(dropout_rates) >= 2, "Invalid image size in model {}".format(
+        model_name)
+    if len(dropout_rates) == 1:
+        # if only one dropout rate specified, use it for both dropout layers
+        dropout_rates = [dropout_rates[0] for _ in range(2)]
 
-    bn = bottleneck(p4, filter_sizes[4])
+    # define architecture (you can use Sequential instead)
+    inputs = layers.Input((image_size[0], image_size[1], 1))
+    c1 = layers.Conv2D(filter_sizes[0], kernel_size=(
+        3, 3), activation='relu')(inputs)
+    c2 = layers.Conv2D(filter_sizes[1], kernel_size=(
+        3, 3), activation='relu')(c1)
+    p1 = layers.MaxPool2D(pool_size=(2, 2))(c2)
+    d1 = layers.Dropout(dropout_rates[0])(p1)
+    f1 = layers.Flatten()(d1)
+    de1 = layers.Dense(units=dense_units, activation='relu')(f1)
+    d2 = layers.Dropout(dropout_rates[1])(de1)
+    outputs = layers.Dense(units=n_classes, activation='softmax')(d2)
 
-    u1 = block_upsampling(bn, c4, filter_sizes[3])  # 8 -> 16
-    u2 = block_upsampling(u1, c3, filter_sizes[2])  # 16 -> 32
-    u3 = block_upsampling(u2, c2, filter_sizes[1])  # 32 -> 64
-    u4 = block_upsampling(u3, c1, filter_sizes[0])  # 64 -> 128
-
-    outputs = keras.layers.Conv2D(
-        n_classes, (1, 1), padding="same", activation="softmax")(u4)
-    model = keras.models.Model(inputs, outputs)
-    model.name='Unet'
-    return model
-
-def resunet_softmax(config):
-    '''
-    resunet(config)
-
-    Implementation of ResUnet Encoder-Decoder architecture.
-    '''
-    filter_sizes = config.model['filter_sizes']
-    image_size = config.data['image_size']
-    n_classes = config.data['n_classes']
-    inputs = keras.layers.Input((image_size[0], image_size[1], 3))
-
-    ## Encoder
-    e0 = inputs
-    e1 = stem_resnet(e0, filter_sizes[0])
-    e2 = residual_block(e1, filter_sizes[1], strides=2)
-    e3 = residual_block(e2, filter_sizes[2], strides=2)
-    e4 = residual_block(e3, filter_sizes[3], strides=2)
-    e5 = residual_block(e4, filter_sizes[4], strides=2)
-
-    ## Bridge
-    b0 = conv_block(e5, filter_sizes[4], strides=1)
-    b1 = conv_block(b0, filter_sizes[4], strides=1)
-
-    ## Decoder
-    u1 = upsample_concat_block(b1, e4)
-    d1 = residual_block(u1, filter_sizes[4])
-
-    u2 = upsample_concat_block(d1, e3)
-    d2 = residual_block(u2, filter_sizes[3])
-
-    u3 = upsample_concat_block(d2, e2)
-    d3 = residual_block(u3, filter_sizes[2])
-
-    u4 = upsample_concat_block(d3, e1)
-    d4 = residual_block(u4, filter_sizes[1])
-
-    outputs = keras.layers.Conv2D(n_classes, (1, 1), padding="same", activation="softmax")(d4)
-    model = keras.models.Model(inputs, outputs)
-    model.name="ResUnet"
+    # define model
+    model = models.Model(inputs, outputs)
+    model.name = model_name
     return model
 
 
-def unet_sigmoid(config):
+def mlp(config):
     '''
-    unet(config)
-
-    Implementation of Unet with four downsampling and upsampling blocks,
-    respectively. Bottleneck and
+    Implementation of a Multilayer perceptron for MNIST classification
+    INPUTS: config: Config object
+            needs to contain fields:
+                config['data']['image_size']: image size. MNIST: (28, 28)
+                config['model']['n_hidden_layers']: Number of hidden layers
+                config['model']['dense_units']: Per hidden layer, number of neurons
+                config['model']['dropout_rates']: Dropout rate per hidden layer
+                config['model']['n_classes']: Number of output classes. MNIST: 10. nss.
+                config['model']['name']: Name, e.g. 'MLP_{}'.format(n_hidden_layers)
     '''
-    filter_sizes = config.model['filter_sizes']
-    image_size = config.data['image_size']
-    n_classes = config.data['n_classes']
-    inputs = keras.layers.Input((image_size[0], image_size[1], 3))
+    # Load parameters from config
+    image_size = config['data']['image_size']
+    n_hidden_layers = config['model']['n_hidden_layers']
+    dense_units = config['model']['dense_units']
+    dropout_rates = config['model']['dropout_rates']
+    n_classes = config['model']['n_classes']
+    model_name = config['model']['name']
 
-    p0 = inputs
-    c1, p1 = block_downsampling(p0, filter_sizes[0])  # 128 -> 64
-    c2, p2 = block_downsampling(p1, filter_sizes[1])  # 64 -> 32
-    c3, p3 = block_downsampling(p2, filter_sizes[2])  # 32 -> 16
-    c4, p4 = block_downsampling(p3, filter_sizes[3])  # 16 -> 8
+    # assert config to be valid
+    assert len(dense_units) >= n_hidden_layers, "Not enough layer sizes specified in model {}".format(model_name)
+    assert len(dropout_rates) >= n_hidden_layers, "Not enough dropout rates specified in model {}".format(model_name)
 
-    bn = bottleneck(p4, filter_sizes[4])
+    # define architecture (you can use Sequential instead)
+    inputs = layers.Input((image_size[0], image_size[1], 1))
+    x = layers.Flatten()(inputs)
+    for k in range(n_hidden_layers):
+        x = layers.Dense(units=dense_units[k])(x)
+        x = layers.Dropout(dropout_rates[k])(x)
+    outputs = layers.Dense(units=n_classes, activation='softmax')(x)
 
-    u1 = block_upsampling(bn, c4, filter_sizes[3])  # 8 -> 16
-    u2 = block_upsampling(u1, c3, filter_sizes[2])  # 16 -> 32
-    u3 = block_upsampling(u2, c2, filter_sizes[1])  # 32 -> 64
-    u4 = block_upsampling(u3, c1, filter_sizes[0])  # 64 -> 128
-
-    outputs = keras.layers.Conv2D(
-        n_classes, (1, 1), padding="same", activation="sigmoid")(u4)
-    model = keras.models.Model(inputs, outputs)
+    # define model
+    model = models.Model(inputs, outputs)
+    model.name = model_name
     return model
 
 
@@ -125,8 +99,8 @@ def print_members():
 
 
 if __name__ == '__main__':
-    print('----------------------')
-    print('Models implementation')
-    print('----------------------')
-    print('Implemented:')
+    print('--------------------------------')
+    print('Models implementation models.py')
+    print('--------------------------------')
+    print('Members:')
     print_members()

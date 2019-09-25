@@ -1,5 +1,6 @@
 import keras
 from tensorflow.python.client import device_lib
+from keras.callbacks import ReduceLROnPlateau
 import os
 import pickle
 import numpy as np
@@ -14,6 +15,7 @@ import load_config
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+
 class NNModel(object):
     def __init__(self, dataset, model, config):
         self.dataset = dataset
@@ -22,71 +24,49 @@ class NNModel(object):
 
     def train(self):
         # compile model
-        self.model.compile(optimizer=self.config.training['optimizer'],
-                           loss=self.config.training['loss'],
-                           metrics=self.config.training['metrics'])
+        self.model.compile(optimizer=self.config['training']['optimizer'],
+                           loss=self.config['training']['loss'],
+                           metrics=self.config['training']['metrics'])
 
-        # load weights
-        if self.config.model['is_pretrained']:
-            # if model pretrained: load weights
-            self.load_pretrained()
+        # TRAINING
+        #callbacks
+        #TODO: make configurable
+        reduce_lr = ReduceLROnPlateau(monitor='val_acc', patience=2)
 
-        # define callbacks
-        reduce_lr = keras.callbacks.ReduceLROnPlateau(
-            monitor='val_categorical_accuracy', factor=0.2, patience=5)
-        early_stopping = keras.callbacks.EarlyStopping(
-            monitor='val_categorical_accuracy', restore_best_weights=True, patience=5)
-        tb = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False,
-                                         embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch')
+        # get optimizer
+        #if self.config['training']['optimizer']
 
-        # train model
+        # Load the dataset
+        self._get_datasets()
+
         now = datetime.now()
-        if self.config.data['use_loader']:
-            # if we use a data loader (many augmentations): get dataloader
-            # get data loaders
-            self._get_dataloaders()
-            self.training_history = \
-                self.model.fit_generator(generator=self.training_loader,
-                                         epochs=self.config.training['n_epochs'],
-                                         validation_data=self.dev_loader,
-                                         use_multiprocessing=self.config.training['use_multiprocessing'])
-        else:
-            # if we load the data set into RAM
-            self._get_datasets()
-            self.training_history = \
-                self.model.fit(x=self.training_set['inputs'],
-                               y=self.training_set['labels'],
-                               epochs=self.config.training['n_epochs'],
-                               validation_data=(
-                               self.test_set['inputs'], self.test_set['labels']),
-                               batch_size=self.config.training['batch_size'],
-                               shuffle=self.config.training['shuffle'],
-                               callbacks=[reduce_lr, early_stopping],
-                               verbose=1)
+        self.training_history = \
+            self.model.fit(x=self.training_set['inputs'],
+                           y=self.training_set['labels'],
+                           epochs=self.config['training']['n_epochs'],
+                           validation_data=(self.test_set['inputs'], self.test_set['labels']),
+                           batch_size=self.config['training']['batch_size'],
+                           shuffle=self.config['training']['shuffle'],
+                           callbacks=[reduce_lr],
+                           verbose=1)
         # train model
         self.trainingtime = datetime.now() - now
         self.training_start = now.strftime(
-            self.config.report['datetimeformat'])
+            self.config['report']['datetimeformat'])
 
-        # save weights
-        if self.config.model['is_saved']:
-            self.save_weights()
+        # save weights if necessary
+        #if self.config['model']['is_saved']:
+        #    self.save_weights()
 
         return
 
     def load_pretrained(self):
-        weights_path = os.path.join(self.config.model['model_folder'],
-                                    self.config.model['filename_load'])
-        try:
-            self.model.load_weights(weights_path)
-            print('LOADED weights from {}'.format(weights_path))
-        except:
-            print('Could not load weights from {}'.format(weights_path))
-        return
+        # if pretrained model is used
+        pass
 
     def save_weights(self):
-        weights_path = os.path.join(self.config.model['model_folder'],
-                                    self.config.model['filename_save'])
+        weights_path = os.path.join(self.config['model']['model_folder'],
+                                    self.config['model']['filename_save'])
         try:
             self.model.save_weights(weights_path)
             print('SAVED weights to {}'.format(weights_path))
@@ -95,101 +75,54 @@ class NNModel(object):
         return
 
     def _get_datasets(self):
-        # if no dataloader is used:
-        if self.config.data['use_pickle']:
-            # if we use a pre-saved dataset split:
-            with open(self.config.data['path_pickle'], 'rb') as handle:
-                print('Loading pickled Dataset from {}...'.format(
-                    self.config.data['path_pickle']))
-                samples = pickle.load(handle)
-                print('    Dataset imported.')
-        else:
-            print('Loading Dataset anew from {}...'.format(
-                self.config.data['path']))
-            # if we don't load the pickled data dict, generate it (can take long time)
-            idx_split = self.dataset.split()
-            samples = {dstype: [self.dataset[idx] for idx in idx_split[dstype]]
-                       for dstype in ['training', 'dev', 'test']}
-            with open(self.config.data['path_pickle'], 'wb') as handle:
-                pickle.dump(samples, handle)
-            print('SAVED Dataset to {}...'.format(
-                self.config.data['path_pickle']))
-        # now extract the training set to a form compatible with model.fit
-        inputs_tr, masks_tr = split_list_of_tuples(samples['training'])
-        inputs_dev, masks_dev = split_list_of_tuples(samples['dev'])
-        inputs_te, masks_te = split_list_of_tuples(samples['test'])
-        self.training_set = {'inputs': inputs_tr, 'labels': masks_tr}
-        self.dev_set = {'inputs': inputs_dev, 'labels': masks_dev}
-        self.test_set = {'inputs': inputs_te, 'labels': masks_te}
+        # Here, we use the MNIST model shipped with keras
+        # For custom datasets, this function may actually be useful
+        self.training_set = self.dataset.training_set
+        self.test_set = self.dataset.test_set
+        self.dev_set = self.dataset.dev_set
         return
 
     def _get_dataloaders(self):
-        self.data_partition = self.dataset.split()
-        self.training_loader = \
-            BatchLoader(dataset=self.dataset,
-                        indices=self.data_partition['training'],
-                        batch_size=self.config.training['batch_size'],
-                        shuffle=self.config.training['shuffle'])
+        # in case you want to use a dataloader instead
+        pass
 
-        self.dev_loader = \
-            BatchLoader(dataset=self.dataset,
-                        indices=self.data_partition['dev'],
-                        batch_size=self.config.training['batch_size'],
-                        shuffle=self.config.training['shuffle'])
-
-        self.test_loader = \
-            BatchLoader(dataset=self.dataset,
-                        indices=self.data_partition['test'],
-                        batch_size=self.config.training['batch_size'],
-                        shuffle=self.config.training['shuffle'])
-        return
-
-    def plot_predictions(self, idc=None, n_samples=4, show=True):
-        x_test = self.test_set['inputs']
-        y_test = self.test_set['labels']
-        if not idc:
-            idc = np.random.randint(
-                low=0, high=x_test.shape[0]-1, size=n_samples)
+    def plot_predictions(self, idc='random', do_plot=True):
+        '''
+        net.plot_predictions(idc, do_plot) visualises four predictions.
+        INPUTS:
+            idc: if a list of four numbers, these numbers will be shown
+                 if 'random', four random examples will be show.
+            do_plot: decides whether a plt.show() is executed in the end.
+                     default: true
+        OUTPUTS: None.
+        '''
+        n_samples = 4  # hardcoded for subplot simplicity and minor importance.
+        x_test, y_test = self.test_set['inputs'], self.test_set['labels']
+        if idc=='random':
+            idc = np.random.randint(low=0, high=x_test.shape[0]-1, size=n_samples)
 
         plt.figure()
-        n_onerow = 3
-        w_mask = .2
-        idx_row = 0
-        for idx_sample in idc:
-            img, gt = x_test[idx_sample, :], y_test[idx_sample, :]
-            scores = self.model.evaluate(np.expand_dims(img, axis=0),
-                                         np.expand_dims(gt, axis=0),
-                                         verbose=0)
-            pred = self.model.predict(np.expand_dims(img, axis=0),
-                                      verbose=0).squeeze()
+        for i_sample in range(n_samples):
+            idx = idc[i_sample]
+            plt.subplot(2, 2, i_sample+1)
 
-            gt_overlay = w_mask*gt[:, :, :3] + (1-w_mask)*img
-            pred_overlay = w_mask*pred[:, :, :3] + (1-w_mask)*img
+            img, label = x_test[idx, :], y_test[idx, :]
 
-            gt_mask = np.argmax(gt, axis=-1)
-            pred_mask = np.argmax(pred, axis=-1)
+            pred = np.argmax(self.model.predict(np.expand_dims(img, axis=0),
+                                      verbose=0).squeeze())
 
-            summary = 'Loss: {}\nCat. accuracy: {}'.format(
-                scores[0], scores[1])
+            # plot now
+            plt.imshow(np.concatenate(3*[img], axis=-1))
+            plt.axis('off')
+            label = np.argmax(label)
+            plt.title('Sample: {}: Label={}, Prediction={}'.format(idx, i_sample, label))
 
-            idx0 = idx_row*n_onerow + 1
-            plt.subplot(n_samples, n_onerow, idx0)
-            plt.imshow(img)
-            plt.title(u'Sample #{}'.format(idx_sample))
-
-            plt.subplot(n_samples, n_onerow, idx0+1)
-            plt.imshow(gt_mask)
-            plt.title('Ground Truth')
-
-            plt.subplot(n_samples, n_onerow, idx0+2)
-            plt.imshow(pred_mask)
-            plt.title(u'Predicition: {}'.format(summary))
-            idx_row += 1
-        if show:
+        if do_plot:
             plt.show()
         return
 
     def _evaluate_model_str(self):
+        # this should not be done for large datasets. mnist itself is already too large
         accs = [str(self.model.evaluate(np.expand_dims(self.test_set['inputs'][idx, :], axis=0),
                                         np.expand_dims(
                                             self.test_set['labels'][idx, :], axis=0),
@@ -203,51 +136,41 @@ class NNModel(object):
                     for key in self.training_history.history.keys()}
 
         # data related to model training
-        training_dict = {'epochs': self.config.training['n_epochs'],
-                         'optimizer': self.config.training['optimizer'],
-                         'loss': self.config.training['loss'],
-                         'metrics': self.config.training['metrics'],
-                         'batch_size': self.config.training['batch_size'],
-                         'shuffle': self.config.training['shuffle'],
+        training_dict = {'epochs': self.config['training']['n_epochs'],
+                         'optimizer': self.config['training']['optimizer'],
+                         'optim_config': self.config['training']['optim_config'],
+                         'loss': self.config['training']['loss'],
+                         'metrics': self.config['training']['metrics'],
+                         'batch_size': self.config['training']['batch_size'],
+                         'shuffle': self.config['training']['shuffle'],
                          'history': hist_str,
-                         'test_accuracies': self._evaluate_model_str()}
+                         #'test_accuracies': self._evaluate_model_str()
+                         }
+
         # data related to the data set
-        data_dict = {'image_size': self.config.data['image_size'],
-                     'led_region': self.config.data['led_region'],
-                     'led_threshold': self.config.data['led_threshold'],
-                     'led_replace': self.config.data['led_replace'],
-                     'class_exclusive': self.config.data['class_exclusive'],
-                     'path_pickle': self.config.data['path_pickle'],
-                     'aug_noisetype': self.config.augmentations['noisetype'],
-                     'aug_rotangle': self.config.augmentations['rotangle'],
-                     'samples': {'train': {'ratio': self.config.data['train_frac'],
-                                           'n_samples': self.training_set['inputs'].shape[0]},
-                                 'test':  {'ratio': self.config.data['test_frac'],
-                                           'n_samples': self.test_set['inputs'].shape[0]},
-                                 'dev':  {'ratio': self.config.data['dev_frac'],
-                                          'n_samples': self.dev_set['inputs'].shape[0]},
+        data_dict = {'name': self.config['data']['name'],
+                     'image_size': self.config['data']['image_size'],
+                     'samples': {'train': {'n_samples': self.training_set['inputs'].shape[0]},
+                                 'test':  {'n_samples': self.test_set['inputs'].shape[0]},
+                                 'dev':  {'n_samples': self.dev_set['inputs'].shape[0]},
                                  }
                      }
 
         # data related to the model architecture
         model_dict = {'name': self.model.name,
                       'n_params': self.model.count_params(),
-                      'is_saved': self.config.model['is_saved'],
-                      'is_pretrained': self.config.model['is_pretrained'],
+                      'is_saved': self.config['model']['is_saved'],
                       'layers': []}
 
-        if self.config.model['is_saved']:
-            model_dict['save_folder'] = self.config.model['model_folder']
-            model_dict['weights_filename'] = self.config.model['filename_save']
-
-        if self.config.model['is_pretrained']:
-            model_dict['pretrained_file'] = self.config.model['filename_load']
+        if self.config['model']['is_saved']:
+            model_dict['save_folder'] = self.config['model']['model_folder']
+            model_dict['weights_filename'] = self.config['model']['filename_save']
 
         for layer in self.model.layers:
             l_dict = {'name': layer.name,
                       'layertype': str(layer).split(' ')[0].split('.')[-1],
                       'n_params': layer.count_params(),
-                      'output_shape': layer.output_shape[1:],
+                      'output_shape': str(layer.output_shape[1:]),
                       'inbound_layers': layer._inbound_nodes[0].get_config()['inbound_layers']
                       }
 
@@ -282,10 +205,14 @@ class NNModel(object):
             elif l_dict['layertype'] == 'Activation':
                 l_dict['activation'] = layerconf['activation']
 
-            elif l_dict['layertype'] == 'Add':
-                pass
+            elif l_dict['layertype'] == 'Dropout':
+                l_dict['activation'] = layerconf['rate']
 
-            elif l_dict['layertype'] == 'InputLayer':
+            elif l_dict['layertype'] == 'Dense':
+                l_dict['n_nodes'] = layerconf['units']
+                l_dict['activation'] = layerconf['activation']
+
+            elif l_dict['layertype'] in ['Flatten', 'Add', 'InputLayer']:
                 pass
 
             else:
@@ -301,8 +228,8 @@ class NNModel(object):
                 'keras_version': keras.__version__,
                 'keras_backend': keras.backend.backend(),
                 'tensorflow_version':  keras.backend.tensorflow_backend.tf.__version__,
-                'timeformat_json': self.config.report['datetimeformat'],
-                'timeformat_pdf': self.config.report['datetimeformat_report'],
+                'timeformat_json': self.config['report']['datetimeformat'],
+                'timeformat_pdf': self.config['report']['datetimeformat_report'],
                 }
 
         # generate dict
@@ -318,7 +245,7 @@ class NNModel(object):
         # write to json
         filename = filename = 'training_{}_{}.json'.format(
             self.model.name.lower(), self.training_start)
-        filepath = os.path.join(self.config.report['export_folder'],
+        filepath = os.path.join(self.config['report']['export_folder'],
                                 filename)
         try:
             with open(filepath, 'w') as handle:
@@ -336,19 +263,6 @@ def split_list_of_tuples(lot):
 
 
 def format_timedelta(tdelta):
-    """
-    Takes a timedelta object and formats it for humans.
-    Usage:
-        # 149 day(s) 8 hr(s) 36 min 19 sec
-        print human_delta(datetime(2014, 3, 30) - datetime.now())
-    Example Results:
-        23 sec
-        12 min 45 sec
-        1 hr(s) 11 min 2 sec
-        3 day(s) 13 hr(s) 56 min 34 sec
-    :param tdelta: The timedelta object.
-    :return: The human formatted timedelta
-    """
     d = dict(days=tdelta.days)
     d['hrs'], rem = divmod(tdelta.seconds, 3600)
     d['min'], d['sec'] = divmod(rem, 60)
@@ -382,4 +296,12 @@ def get_device_info():
 
 
 if __name__ == '__main__':
-    print('Training procedure implemented in class NNModel')
+    from load_config import Config
+    from models.models import convnet2, mlp
+    from dataset.dataset import MNISTDataset
+
+    config = Config('./configs/config_mlp.json').config
+    dataset = MNISTDataset(config)
+    model = mlp(config)
+
+    net = NNModel(dataset=dataset, model=model, config=config)

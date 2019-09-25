@@ -23,7 +23,7 @@ latex_jinja_env = jinja2.Environment(
     loader=jinja2.FileSystemLoader('./latex'))
 
 
-def get_tikz_strings(model_dict):
+def get_tikz_strings(model_dict, do_hist=True):
     epochs = [ep+1 for ep in list(range(model_dict['training']['epochs']))]
     hist = model_dict['training']['history']
 
@@ -54,13 +54,13 @@ def get_tikz_strings(model_dict):
             else:
                 plt.ylabel(metric_disp)
             min_metric = float(min(hist[metric]))
-            ymin, ymax = .9*min(round(min_metric, 1), 0.5), 1.025
+            ymin, ymax = .9*min(round(min_metric, 1), 0.8), 1.025
             yval = [float(val) for val in hist[metric]]
 
             # axis limits
             plt.axis([xmin, xmax, ymin, ymax])
             # plot
-            plt.plot(epochs, yval, marker, label=metric_disp,
+            plt.plot(epochs[:len(yval)], yval, marker, label=metric_disp,
                                            markersize=5,
                                            linewidth=1)
         # horizontal line at y=1
@@ -93,7 +93,7 @@ def get_tikz_strings(model_dict):
         # axis limits
         plt.axis([xmin, xmax, ymin, ymax])
         # plot
-        plt.plot(epochs, yval, marker, label=metric_disp,
+        plt.plot(epochs[:len(yval)], yval, marker, label=metric_disp,
                                        markersize=5,
                                        linewidth=1)
     plt.legend(loc='upper right')
@@ -120,7 +120,7 @@ def get_tikz_strings(model_dict):
     # axis limits
     plt.axis([xmin, xmax, ymin, ymax])
     # plot
-    plt.plot(epochs, yval, marker, label='Learning Rate',
+    plt.plot(epochs[:len(yval)], yval, marker, label='Learning Rate',
                                    markersize=5,
                                    linewidth=1)
     plt.legend(loc='upper right')
@@ -128,21 +128,7 @@ def get_tikz_strings(model_dict):
     tikz_lr = tikzplotlib.get_tikz_code(extra_axis_parameters={'font=\small'},
                                          strict=True)
 
-    #########################################
-    # test histogram
-    plt.close()
-    vals = [float(val) for val in model_dict['training']['test_accuracies']]
-    lower = min(vals+[.5])
-    bins = linspace(lower, 1., 11)
-    plt.figure()
-    plt.hist(vals, bins=bins)
-    plt.xlabel('Test accuracy')
-    plt.ylabel('Number of samples')
-    plt.title(r'{\bf Accuracy distribution on Test set}')
-    tikz_eval = tikzplotlib.get_tikz_code(extra_axis_parameters={'font=\small'},
-                                         strict=True)
-
-    out_dict = {'loss': tikz_loss, 'acc': tikz_acc, 'lr': tikz_lr, 'eval': tikz_eval}
+    out_dict = {'loss': tikz_loss, 'acc': tikz_acc, 'lr': tikz_lr}
     return out_dict
 
 
@@ -177,29 +163,19 @@ def clean_latex(folder):
     return
 
 
-def make_reports(json_dir, template_name='template.tex', out_dir='./reports'):
+def make_reports(json_dir, doc, template_name='template.tex', out_dir='./reports'):
     # define processing function
     def _process_dict(model_dict):
         # rounding accuracies
-        model_dict['training']['history']['val_categorical_accuracy_perc'] = str(round(
-            100*float(model_dict['training']['history']['val_categorical_accuracy'][-1]), 2))
-        model_dict['training']['history']['categorical_accuracy_perc'] = str(round(
-            100*float(model_dict['training']['history']['categorical_accuracy'][-1]), 2))
+        model_dict['training']['history']['val_accuracy_perc'] = str(round(
+            100*float(model_dict['training']['history']['val_acc'][-1]), 2))
+        model_dict['training']['history']['accuracy_perc'] = str(round(
+            100*float(model_dict['training']['history']['acc'][-1]), 2))
 
-        # rounding dataset ratios
-        for entry in ['train', 'test', 'dev']:
-            model_dict['data']['samples'][entry]['ratio_perc'] = str(
-                round(100*float(model_dict['data']['samples'][entry]['ratio']), 0))
-
-        # epochs of pretrained model
-        if model_dict['model']['is_pretrained']:
-            fn = model_dict['model']['pretrained_file']
-            n_pretr_ep = int(os.path.splitext(
-                fn)[0].split('_')[-1].replace('ep', ''))
-            model_dict['model']['pretrained_epochs'] = str(n_pretr_ep)
+        # correct in case of early stopping
+        model_dict['training']['epochs'] = len(model_dict['training']['history']['loss'])
 
         # boolean to yes/no string
-        model_dict['model']['is_pretrained'] = "Yes" if model_dict['model']['is_pretrained'] else "No"
         model_dict['training']['shuffle'] = "Yes" if model_dict['training']['shuffle'] else "No"
 
         # add type to inbound layers
@@ -221,17 +197,12 @@ def make_reports(json_dir, template_name='template.tex', out_dir='./reports'):
         for layer in model_dict['model']['layers']:
             layer['name'] = layer['name'].replace('_', '\_').strip()
 
-        # noisetype to latex string
-        model_dict['data']['aug_noisetype'] = model_dict['data']['aug_noisetype'].replace(
-            '&', '\&')
-
-        # backslashs in paths
-        model_dict['data']['path_pickle'] = str_to_latex(
-            model_dict['data']['path_pickle'])
-
         # loss format
         model_dict['training']['loss'] = model_dict['training']['loss'].replace(
             '_', ' ')
+
+        # model and dataset name
+        model_dict['model']['name'] = str_to_latex(model_dict['model']['name'])
 
         # path
         weights_path = os.path.join(
@@ -240,6 +211,10 @@ def make_reports(json_dir, template_name='template.tex', out_dir='./reports'):
             model_dict['model']['weights_path'] = str_to_latex(weights_path)
         else:
             model_dict['model']['weights_path'] = 'Weights not saved'
+
+        # make optimizer config latex-friendly
+        for key in model_dict['training']['optim_config'].keys():
+            model_dict['training']['optim_config'] = str_to_latex(str(model_dict['training']['optim_config'][key]))
 
         # datetime
         timestamp = datetime.strptime(
@@ -256,7 +231,7 @@ def make_reports(json_dir, template_name='template.tex', out_dir='./reports'):
             model_dict['metadata']['training_device']['cpu']['brand'])
 
         # plots
-        model_dict['plots_tikz'] = get_tikz_strings(model_dict)
+        model_dict['plots_tikz'] = get_tikz_strings(model_dict, do_hist=False)
         return model_dict
 
     # initialise list
@@ -281,12 +256,12 @@ def make_reports(json_dir, template_name='template.tex', out_dir='./reports'):
     unique_modelnames = set([summary['model']['name']
                              for summary in summaries])
     unique_models = [{'modelname': modelname, 'model_idc': [k for k in range(len(
-        summaries)) if modelname in summaries[k]['model']['name']]} for modelname in unique_modelnames]
+        summaries)) if modelname==summaries[k]['model']['name']]} for modelname in unique_modelnames]
 
     # generate pdf
     fn = 'template.tex'
     templ = latex_jinja_env.get_template(fn)
-    rendered = templ.render(summaries=summaries, model_list=unique_models)
+    rendered = templ.render(summaries=summaries, model_list=unique_models, doc=doc)
     compile_tex(rendered, out_dir)
     return summaries, unique_models
 
@@ -299,5 +274,5 @@ if __name__ == '__main__':
     # rendered = templ.render(model=model)
     # compile_tex(rendered, './reports')
 
-    json_dir= r'D:\NeuralNets\GalileiTopViewSegmenter'
-    ms, un = make_reports(json_dir)
+    json_dir= r'D:\code_d\deep_training_reports\jsons'
+    ms, un = make_reports(json_dir, doc={'title':'TITLE', 'author':'AUTHOR'})
