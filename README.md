@@ -109,3 +109,7 @@ Layers which are already implemented ([RTFM](https://keras.io/layers/core/)): `I
 To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
 
 ### Example screenshots
+![Frontpage](/reports/frontpage_example.png "Report frontpage")
+![Training plots](/reports/plots_example.png "Training history plots")
+![Study details](/reports/details_example.png "Study details")
+![Architecture](/reports/arch_example.png "Model architecture")
