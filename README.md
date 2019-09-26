@@ -14,7 +14,7 @@ In the end, you are left with more time to think about what really matters.
    Write each model configuration to a `.json` in the folder `model_configs`.
    Define the number of epochs, the batch size, optimizer, its parameters, a custom name for the study, and even add a link to the paper or github-repo containing the model.
 2. Run `train.py`. This will do the following:
-   --1. Read all the configuration `.json` inside the folder `model_configs`,
-   --2. Train all models with parameters specified in the `.json`,
-   --3. After each training, write another `.json` with all training results to the directory `training_logs`,
-   --4. Run `report.py` to read each of the `training_logs/*.json`, and fill them into the LaTeX template `latex/template.tex`. This will render the template to a `.tex` file and call `pdflatex` to create a `.pdf`.
+   ⋅⋅1. Read all the configuration `.json` inside the folder `model_configs`,
+   ⋅⋅2. Train all models with parameters specified in the `.json`,
+   ⋅⋅3. After each training, write another `.json` with all training results to the directory `training_logs`,
+   ⋅⋅4. Run `report.py` to read each of the `training_logs/*.json`, and fill them into the LaTeX template `latex/template.tex`. This will render the template to a `.tex` file and call `pdflatex` to create a `.pdf`.
