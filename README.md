@@ -10,10 +10,10 @@
 - [Configuration](#configuration)
     - [Configuration of the reporting tool `report_config.json`](#configuration-of-the-reporting-tool-report_configjson)
     - [Configuration of each model `model_configs/X.json`](#configuration-of-each-model-model_configsxjson)
-        - [`data` field:](#data-field)
-        - [`model` field:](#model-field)
-        - [`training` field:](#training-field)
-        - [`report` field:](#report-field)
+        - [`data` field](#data-field)
+        - [`model` field](#model-field)
+        - [`training` field](#training-field)
+        - [`report` field](#report-field)
 - [Important modules](#important-modules)
 - [How to implement a new model](#how-to-implement-a-new-model)
 
@@ -77,13 +77,13 @@ The following keys are specified therein:
 ### Configuration of each model `model_configs/X.json`
 These jsons have four subsections `data`, `model`, `training`, `report`. For your personal needs, you can add fields as you wish.
 
-#### `data` field:
+#### `data` field
 | Key | Type | Default | Description |
 |-----|---------|---------|-------------|
 |`name`|`str`|no default|Name of your dataset (will appear in report).|
 |`image_size`|list of `int`, length=2|If you work with image data like I do, here is where you specify to what size the inputs will be downsampled.|
 
-#### `model` field:
+#### `model` field
 Depending on how you are parametrising your model and the layers you are using, different keys will arise here. Attached is an example for MLPs and a simple ConvNet.
 
 | Key | Type | Description |
@@ -97,7 +97,7 @@ Depending on how you are parametrising your model and the layers you are using, 
 |`is_saved`|`boolean`|If `true`, the weights will be saved after training.|
 |`model_folder`|`str`|If `is_saved` is `true`, this specifies the directory where the weights will be saved.|
 
-#### `training` field:
+#### `training` field
 Depending on how you are parametrising your model and the layers you are using, different keys will arise here. Attached is an example for MLPs and a simple ConvNet.
 
 | Key | Type | Description |
@@ -110,7 +110,7 @@ Depending on how you are parametrising your model and the layers you are using, 
 |`batch_size`|`int`|Batch size ([RTFM](https://keras.io/models/sequential/#fit)).|
 |`shuffle`|`boolean`|Batches will be reshuffled if set to `true` ([RTFM](https://keras.io/models/sequential/#fit)).|
 
-#### `report` field:
+#### `report` field
 This contains some info about the reporting tool that will be displayed but is by itself unrelated to the models or the optimisation.
 
 | Key | Type | Description |
