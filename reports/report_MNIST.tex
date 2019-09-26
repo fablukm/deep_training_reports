@@ -733,192 +733,10 @@ table {%
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Model Architectures}
-\subsection{ConvNet2layers
-            \label{model:ConvNet2layers}
-            }
-\paragraph{Used in \No{}:}
-    \hyperref[training:3]
-             {3}
-\vspace{-2ex}
-%
-\paragraph{Model summary:}$\,$\\
-\begin{longtable}{rR{.22\textwidth}cL{.22\textwidth}rL{.22\textwidth}}
-    \hline\\[-1.5ex]
-    \No{} &
-    Layer (Type) &
-    Output shape &
-    Config &
-    \#Parameters &
-    Inbound layers\\
-    \hline\\
-    \endhead
-        0
-        &
-        \color{InputLayer}{
-        input\_1}
-        \color{InputLayer}{
-        (InputLayer)}
-        &
-        (28, 28, 1)
-        &
-        &
-        \num{0}
-        &
-        \\
-        \hline\\[-1.5ex]
-        1
-        &
-        \color{Conv2D}{
-        conv2d\_1}
-        \color{Conv2D}{
-        (Conv2D)}
-        &
-        (26, 26, 32)
-        &
-            {\bf Activation:} relu \newline
-            {\bf Kernel Size:} [3, 3] \newline
-            {\bf Stride:} [1, 1] \newline
-            {\bf Dilation:} [1, 1] \newline
-            {\bf Padding:} valid
-        &
-        \num{320}
-        &
-        \color{InputLayer}{
-            input\_1}
-        \\
-        \hline\\[-1.5ex]
-        2
-        &
-        \color{Conv2D}{
-        conv2d\_2}
-        \color{Conv2D}{
-        (Conv2D)}
-        &
-        (24, 24, 64)
-        &
-            {\bf Activation:} relu \newline
-            {\bf Kernel Size:} [3, 3] \newline
-            {\bf Stride:} [1, 1] \newline
-            {\bf Dilation:} [1, 1] \newline
-            {\bf Padding:} valid
-        &
-        \num{18496}
-        &
-        \color{Conv2D}{
-            conv2d\_1}
-        \\
-        \hline\\[-1.5ex]
-        3
-        &
-        \color{MaxPooling2D}{
-        max\_pooling2d\_1}
-        \color{MaxPooling2D}{
-        (MaxPooling2D)}
-        &
-        (12, 12, 64)
-        &
-            {\bf Pool size:} [2, 2] \newline
-            {\bf Strides:} [2, 2] \newline
-            {\bf Padding:} valid
-        &
-        \num{0}
-        &
-        \color{Conv2D}{
-            conv2d\_2}
-        \\
-        \hline\\[-1.5ex]
-        4
-        &
-        \color{Dropout}{
-        dropout\_1}
-        \color{Dropout}{
-        (Dropout)}
-        &
-        (12, 12, 64)
-        &
-            {\bf Dropout Rate:} 0.0
-        &
-        \num{0}
-        &
-        \color{MaxPooling2D}{
-            max\_pooling2d\_1}
-        \\
-        \hline\\[-1.5ex]
-        5
-        &
-        \color{Flatten}{
-        flatten\_1}
-        \color{Flatten}{
-        (Flatten)}
-        &
-        (9216,)
-        &
-        &
-        \num{0}
-        &
-        \color{Dropout}{
-            dropout\_1}
-        \\
-        \hline\\[-1.5ex]
-        6
-        &
-        \color{Dense}{
-        dense\_1}
-        \color{Dense}{
-        (Dense)}
-        &
-        (128,)
-        &
-            {\bf \#Neurons:} 128\newline
-            {\bf Activation:} relu
-        &
-        \num{1179776}
-        &
-        \color{Flatten}{
-            flatten\_1}
-        \\
-        \hline\\[-1.5ex]
-        7
-        &
-        \color{Dropout}{
-        dropout\_2}
-        \color{Dropout}{
-        (Dropout)}
-        &
-        (128,)
-        &
-            {\bf Dropout Rate:} 0.2
-        &
-        \num{0}
-        &
-        \color{Dense}{
-            dense\_1}
-        \\
-        \hline\\[-1.5ex]
-        8
-        &
-        \color{Dense}{
-        dense\_2}
-        \color{Dense}{
-        (Dense)}
-        &
-        (10,)
-        &
-            {\bf \#Neurons:} 10\newline
-            {\bf Activation:} softmax
-        &
-        \num{1290}
-        &
-        \color{Dropout}{
-            dropout\_2}
-        \\
-        \hline\\[-1.5ex]
-\end{longtable}
-\newpage
-\subsection{MLP5layers
+\subsection{Model architecture of MLP5layers
             \label{model:MLP5layers}
             }
-\paragraph{Used in \No{}:}
+\paragraph{Used in study \No{}:}
     \hyperref[training:3]
              {3}
 \vspace{-2ex}
@@ -1159,10 +977,10 @@ table {%
         \hline\\[-1.5ex]
 \end{longtable}
 \newpage
-\subsection{MLP2layers
+\subsection{Model architecture of MLP2layers
             \label{model:MLP2layers}
             }
-\paragraph{Used in \No{}:}
+\paragraph{Used in study \No{}:}
     \hyperref[training:3]
              {3}
 \vspace{-2ex}
@@ -1294,6 +1112,188 @@ table {%
         &
         \color{Dropout}{
             dropout\_4}
+        \\
+        \hline\\[-1.5ex]
+\end{longtable}
+\newpage
+\subsection{Model architecture of ConvNet2layers
+            \label{model:ConvNet2layers}
+            }
+\paragraph{Used in study \No{}:}
+    \hyperref[training:3]
+             {3}
+\vspace{-2ex}
+%
+\paragraph{Model summary:}$\,$\\
+\begin{longtable}{rR{.22\textwidth}cL{.22\textwidth}rL{.22\textwidth}}
+    \hline\\[-1.5ex]
+    \No{} &
+    Layer (Type) &
+    Output shape &
+    Config &
+    \#Parameters &
+    Inbound layers\\
+    \hline\\
+    \endhead
+        0
+        &
+        \color{InputLayer}{
+        input\_1}
+        \color{InputLayer}{
+        (InputLayer)}
+        &
+        (28, 28, 1)
+        &
+        &
+        \num{0}
+        &
+        \\
+        \hline\\[-1.5ex]
+        1
+        &
+        \color{Conv2D}{
+        conv2d\_1}
+        \color{Conv2D}{
+        (Conv2D)}
+        &
+        (26, 26, 32)
+        &
+            {\bf Activation:} relu \newline
+            {\bf Kernel Size:} [3, 3] \newline
+            {\bf Stride:} [1, 1] \newline
+            {\bf Dilation:} [1, 1] \newline
+            {\bf Padding:} valid
+        &
+        \num{320}
+        &
+        \color{InputLayer}{
+            input\_1}
+        \\
+        \hline\\[-1.5ex]
+        2
+        &
+        \color{Conv2D}{
+        conv2d\_2}
+        \color{Conv2D}{
+        (Conv2D)}
+        &
+        (24, 24, 64)
+        &
+            {\bf Activation:} relu \newline
+            {\bf Kernel Size:} [3, 3] \newline
+            {\bf Stride:} [1, 1] \newline
+            {\bf Dilation:} [1, 1] \newline
+            {\bf Padding:} valid
+        &
+        \num{18496}
+        &
+        \color{Conv2D}{
+            conv2d\_1}
+        \\
+        \hline\\[-1.5ex]
+        3
+        &
+        \color{MaxPooling2D}{
+        max\_pooling2d\_1}
+        \color{MaxPooling2D}{
+        (MaxPooling2D)}
+        &
+        (12, 12, 64)
+        &
+            {\bf Pool size:} [2, 2] \newline
+            {\bf Strides:} [2, 2] \newline
+            {\bf Padding:} valid
+        &
+        \num{0}
+        &
+        \color{Conv2D}{
+            conv2d\_2}
+        \\
+        \hline\\[-1.5ex]
+        4
+        &
+        \color{Dropout}{
+        dropout\_1}
+        \color{Dropout}{
+        (Dropout)}
+        &
+        (12, 12, 64)
+        &
+            {\bf Dropout Rate:} 0.0
+        &
+        \num{0}
+        &
+        \color{MaxPooling2D}{
+            max\_pooling2d\_1}
+        \\
+        \hline\\[-1.5ex]
+        5
+        &
+        \color{Flatten}{
+        flatten\_1}
+        \color{Flatten}{
+        (Flatten)}
+        &
+        (9216,)
+        &
+        &
+        \num{0}
+        &
+        \color{Dropout}{
+            dropout\_1}
+        \\
+        \hline\\[-1.5ex]
+        6
+        &
+        \color{Dense}{
+        dense\_1}
+        \color{Dense}{
+        (Dense)}
+        &
+        (128,)
+        &
+            {\bf \#Neurons:} 128\newline
+            {\bf Activation:} relu
+        &
+        \num{1179776}
+        &
+        \color{Flatten}{
+            flatten\_1}
+        \\
+        \hline\\[-1.5ex]
+        7
+        &
+        \color{Dropout}{
+        dropout\_2}
+        \color{Dropout}{
+        (Dropout)}
+        &
+        (128,)
+        &
+            {\bf Dropout Rate:} 0.2
+        &
+        \num{0}
+        &
+        \color{Dense}{
+            dense\_1}
+        \\
+        \hline\\[-1.5ex]
+        8
+        &
+        \color{Dense}{
+        dense\_2}
+        \color{Dense}{
+        (Dense)}
+        &
+        (10,)
+        &
+            {\bf \#Neurons:} 10\newline
+            {\bf Activation:} softmax
+        &
+        \num{1290}
+        &
+        \color{Dropout}{
+            dropout\_2}
         \\
         \hline\\[-1.5ex]
 \end{longtable}
