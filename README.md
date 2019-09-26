@@ -3,7 +3,7 @@
 ## Why
 When training Neural networks, we compare differnet choices of hyperparameters and architectures to determine which model performs best. To compare the different results, metrics need to be written down and put into a table by hand for presentation.
 
-This package implements a practical all-in-one solution for _keras_ models. It trains the models with their respective configuration and writes a `.pdf` directly, which contains all information, history plots, a table comparing metrics of all the different models at once, a model summary for all used architectures, etc.
+This package implements a practical all-in-one solution for _keras_ sequential models. It trains the models with their respective configuration and writes a `.pdf` directly, which contains all information, history plots, a table comparing metrics of all the different models at once, a model summary for all used architectures, etc.
 
 Training accuracy, loss, and learning rate plots are written in `tikz` and passed to LaTeX template.
 
@@ -59,6 +59,19 @@ Depending on how you are parametrising your model and the layers you are using, 
 |`n_classes`|`int`|Number of output classes or masks (used as parameter in model definition).|
 |`is_saved`|`boolean`|If `true`, the weights will be saved after training.|
 |`model_folder`|`str`|If `is_saved` is `true`, this specifies the directory where the weights will be saved.|
+
+#### `training` field:
+Depending on how you are parametrising your model and the layers you are using, different keys will arise here. Attached is an example for MLPs and a simple ConvNet.
+
+| Key | Type | Description |
+|-----|---------|-------------|
+|`optimizer`|`str`|Name of the optimizer you want to use. If you use a _keras_ implemented one, the `.pdf` report will contain author and year of the related publication.|
+|`optim_config`|`dict`|Configuration of the optimizer specified above. All unspecified values will lead to default values being used. The `.pdf` report will list all parameters and the configuration used in training.|
+|`loss`|`str`|Name of the loss function to be used. Custom loss functions can be defined, but must be imported to `nn_wrapper.py`.|
+|`metrics`|list of `str`|The metric _keras_ will use in training. ([RTFM](https://keras.io/metrics/))|
+|`n_epochs`|`int`|Number of epochs.|
+|`batch_size`|`int`|Batch size ([RTFM](https://keras.io/models/sequential/#fit)).|
+|`shuffle`|`boolean`|Batches will be reshuffled if set to `true`([RTFM](https://keras.io/models/sequential/#fit)).|
 
 
 
