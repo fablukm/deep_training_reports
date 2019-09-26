@@ -16,12 +16,16 @@ The `.pdf` is rendered from a LaTeX template using Jinja2. This means that the t
 To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
 
 ### Example screenshots
+This is how the frontpage looks like using a blank LaTeX template:
 ![Frontpage](/example_screenshots/frontpage_example.png "Report frontpage")
 
+This is how the training plots like using a blank LaTeX template (not the dummy MNIST example implemented in this repo, but one of the models I am testing for other purposes):
 ![Training plots](/example_screenshots/plots_example.png "Training history plots")
 
+This is how the study details get listed using a blank LaTeX template:
 ![Study details](/example_screenshots/details_example.png "Study details")
 
+This is how the model architecture gets listed using a blank LaTeX template:
 ![Architecture](/example_screenshots/arch_example.png "Model architecture")
 
 ## Getting started
