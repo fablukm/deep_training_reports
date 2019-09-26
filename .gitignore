@@ -3,7 +3,7 @@
 training_logs/*.json
 reports/*.pdf
 reports/*.tex
-weights/*.hd5
+weights/*.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
