@@ -1,8 +1,6 @@
 **keras_reports**: Automatic generation of training reports and model comparison in _keras_
 ======
 
-
-
 ## Why
 When training Neural networks, we compare differnet choices of hyperparameters and architectures to determine which model performs best. To compare the different results, metrics need to be written down and put into a table by hand for presentation.
 
@@ -11,6 +9,8 @@ This package implements a practical all-in-one solution for _keras_ sequential m
 Training accuracy, loss, and learning rate plots are written in `tikz` and passed to LaTeX template.
 
 The `.pdf` is rendered from a LaTeX template using Jinja2. This means that the template is __fully customisable__ to fit into conference `.tex` templates, or corporate report layouts.
+
+This repository only contains a __dummy MNIST example__. The generalisation should be straight-forward from this manual, contact me otherwise.
 
 ## Example
 To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
