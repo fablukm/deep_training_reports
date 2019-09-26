@@ -30,8 +30,9 @@ The following keys are specified therein:
 
 | Key | Default | Description |
 |-----|---------|-------------|
-|`model_config_folder`|`training_logs`|Folder where the configurations of each study are saved|
+|`model_config_folder`|`"model_configs"`|Folder where the configurations of each study are saved|
 |`models_to_train`|`[]`|List of filenames within `model_config_folder`. If non-empty, the report will only be generated using the specified files.|
+|train_log_dir|`"training_logs"`|Directory where after each training step, the summary of the training process will be stored as `.json`.|
 
 
 
