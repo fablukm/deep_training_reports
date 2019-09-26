@@ -5,5 +5,5 @@
 "documenttitle": {"title": "MNIST Training Example",
                   "author": "Test Document Author"},
 "render_folder": "reports",
-"report_filename": "report_MNIST"
+"report_filename": "report"
 }
