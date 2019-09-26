@@ -1,5 +1,24 @@
 # keras_reports
 
+<!-- TOC -->
+
+- [keras_reports](#keras_reports)
+    - [Why](#why)
+    - [Getting started](#getting-started)
+    - [Configuration](#configuration)
+        - [Configuration of the reporting tool `report_config.json`](#configuration-of-the-reporting-tool-report_configjson)
+        - [Configuration of each model `model_configs/X.json`](#configuration-of-each-model-model_configsxjson)
+            - [`data` field:](#data-field)
+            - [`model` field:](#model-field)
+            - [`training` field:](#training-field)
+            - [`report` field:](#report-field)
+    - [Important modules](#important-modules)
+    - [How to implement a new model](#how-to-implement-a-new-model)
+    - [Example](#example)
+        - [Example screenshots](#example-screenshots)
+
+<!-- /TOC -->
+
 ## Why
 When training Neural networks, we compare differnet choices of hyperparameters and architectures to determine which model performs best. To compare the different results, metrics need to be written down and put into a table by hand for presentation.
 
@@ -94,15 +113,15 @@ This contains some info about the reporting tool that will be displayed but is b
 3. __`dataset/dataset.py`__ Implement the dataset as class readable by `nn_wrapper.py`.
 4. __`nn_wrapper.py`:__ Contains a wrapper class `NeuralNetWrapper(dataset, model, config)`. Reads configuration file, model and the dataset. Contains a method `.train()` which will train the model according to the specified configuration, and a method `.to_json` which will export the training log to the directory specified in the configuration.
 
-
-## Example
-To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file.
-
 ## How to implement a new model
 1. Add your model to `models/models.py`. I usually define custom layers in a `layers.py` in the same subfolder, but that is up to you.
 2. _In case you use layers which are not yet implemented,_ choose what configuration will be printed in the report by adding a configuration to the endless `if-elif-else` section in `nn_wrapper` (in the definition of the method `.to_json()` to the class `NeuralNetWrapper`).
 3. _In case you use layers which are not yet implemented,_ define a colour in which the layer will be displayed. Add it to the colour definition section in the beginning of the template section of `latex/template.tex`.
 4. Add your model to the function `choose_model()` in `train.py`.
 
-Layers which are already implemented: `InputLayer`, `Conv2D`, `BatchNormalization`, `Dense`, `UpSampling2D`, `MaxPooling2D`, `Activation`, `Dropout`, `Concatenate`, `Flatten`, `Add`
-([RTFM](https://keras.io/layers/core/)).
+Layers which are already implemented ([RTFM](https://keras.io/layers/core/)): `InputLayer`, `Conv2D`, `BatchNormalization`, `Dense`, `UpSampling2D`, `MaxPooling2D`, `Activation`, `Dropout`, `Concatenate`, `Flatten`, `Add`.
+
+## Example
+To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
+
+### Example screenshots
