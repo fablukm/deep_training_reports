@@ -26,6 +26,8 @@
 "augmentations": {
 },
 "report":{
+    "study_name": "Two layer MLP",
+    "link": "https://keras.io/examples/mnist_mlp/",
     "export_folder": "training_logs",
     "datetimeformat": "%d%m%Y_%Hh%M",
     "datetimeformat_report": "%d.%m.%Y at %H:%M"

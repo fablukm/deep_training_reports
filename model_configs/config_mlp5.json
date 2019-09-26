@@ -24,6 +24,8 @@
 "augmentations": {
 },
 "report":{
+    "study_name": "Five layer MLP",
+    "link": "",
     "export_folder": "training_logs",
     "datetimeformat": "%d%m%Y_%Hh%M",
     "datetimeformat_report": "%d.%m.%Y at %H:%M"

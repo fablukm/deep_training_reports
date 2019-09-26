@@ -43,13 +43,14 @@ $\,$\\[-2ex]
 \section{Summary}
 \begin{tabular}{rrrrrrrr}
     \hline\\[-1.5ex]
-    \No{} & Dataset & Model name & \#Parameters & \#Epochs & Batch size & Test Acc. & Training Acc. \\
+    \No{} & Study name & Model & \#Parameters & \#Epochs & Batch size & Test Acc. & Training Acc. \\
     \hline\\[-1.5ex]
 
     %% for summary in summaries
     \hyperref[training:\VAR{summary['model']['reportnumber']}]
              {\VAR{summary['model']['reportnumber']}} &
-    \VAR{summary['data']['name']} &
+    \hyperref[training:\VAR{summary['model']['reportnumber']}]
+        {\VAR{summary['metadata']['study_name']}} &
     \hyperref[model:\VAR{summary['model']['name']}]
              {\VAR{summary['model']['name']}} &
     \num{\VAR{summary['model']['n_params']}} &
@@ -72,7 +73,7 @@ $\,$\\[-2ex]
 %% for summary in summaries
     %
     \subsection{Model \VAR{summary['model']['reportnumber']}:
-                        \VAR{summary['model']['name']}
+                        \VAR{summary['metadata']['study_name']}
                 \label{training:\VAR{summary['model']['reportnumber']}}
                 }
     %
@@ -100,6 +101,10 @@ $\,$\\[-2ex]
                     {\VAR{summary['model']['reportnumber']}}.
                 \label{fig:results\VAR{summary['model']['reportnumber']}}}
     \end{figure}
+
+    \newpage
+
+    \VAR{summary['metadata']['link_latex']}
 
     \subsubsection*{Dataset}
     \begin{description}

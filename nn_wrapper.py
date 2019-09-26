@@ -244,6 +244,8 @@ class NeuralNetWrapper(object):
                 'tensorflow_version':  keras.backend.tensorflow_backend.tf.__version__,
                 'timeformat_json': self.config['report']['datetimeformat'],
                 'timeformat_pdf': self.config['report']['datetimeformat_report'],
+                'study_name': self.config['report']['study_name'],
+                'link': self.config['report']['link'],
                 }
 
         # generate dict

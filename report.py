@@ -262,6 +262,14 @@ def make_reports(train_log_dir, doc, out_dir='reports', out_filename='rendered',
 
         # plots
         model_dict['plots_tikz'] = get_tikz_strings(model_dict, do_hist=False)
+
+        # check if link is available and format to latex
+        if len(model_dict['metadata']['link']) > 0:
+            model_dict['metadata']['link_latex'] = '{{\\bf Link to model:}} \\url{{{}}}'.format(
+                model_dict['metadata']['link'])
+        else:
+            model_dict['metadata']['link_latex'] = ''
+
         return model_dict
 
     # initialise list

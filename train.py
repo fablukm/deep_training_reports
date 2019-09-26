@@ -65,4 +65,4 @@ def main(report_config='./report_config.json', render_reports=True):
 
 
 if __name__ == '__main__':
-    main()
+    main(render_reports=True)
