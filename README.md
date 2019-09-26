@@ -85,5 +85,24 @@ This contains some info about the reporting tool that will be displayed but is b
 |`datetimeformat_report`|`int`|The datetime format which will be used in the report ([RTFM](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior)).|
 
 
+## Important modules
+1. __`train.py`__ Contains a function `main(report_config='./report_config.json', render_reports=True)`:
+   * `report_config` Str, points to the report configuration file
+   * `render_reports`: Boolean, if True, it will already run the report generation after training is over (concretely, it will run the funciton `make_reports` in `report.py`).
+2. __`report.py`__ Contains a function `main(report_config='report_config.json')`:
+   * `report_config` Str, points to the report configuration file.
+3. __`dataset/dataset.py`__ Implement the dataset as class readable by `nn_wrapper.py`.
+4. __`nn_wrapper.py`:__ Contains a wrapper class `NeuralNetWrapper(dataset, model, config)`. Reads configuration file, model and the dataset. Contains a method `.train()` which will train the model according to the specified configuration, and a method `.to_json` which will export the training log to the directory specified in the configuration.
+
+
 ## Example
 To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file.
+
+## How to implement a new model
+1. Add your model to `models/models.py`. I usually define custom layers in a `layers.py` in the same subfolder, but that is up to you.
+2. _In case you use layers which are not yet implemented,_ choose what configuration will be printed in the report by adding a configuration to the endless `if-elif-else` section in `nn_wrapper` (in the definition of the method `.to_json()` to the class `NeuralNetWrapper`).
+3. _In case you use layers which are not yet implemented,_ define a colour in which the layer will be displayed. Add it to the colour definition section in the beginning of the template section of `latex/template.tex`.
+4. Add your model to the function `choose_model()` in `train.py`.
+
+Layers which are already implemented: `InputLayer`, `Conv2D`, `BatchNormalization`, `Dense`, `UpSampling2D`, `MaxPooling2D`, `Activation`, `Dropout`, `Concatenate`, `Flatten`, `Add`
+([RTFM](https://keras.io/layers/core/)).
