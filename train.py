@@ -10,10 +10,11 @@ import time
 
 import os
 
+
 def choose_model(model_config):
     if model_config['model']['name'] == 'ConvNet2layers':
         model = models.convnet2(model_config)
-    elif model_config['model']['name'][:3]=='MLP':
+    elif model_config['model']['name'][:3] == 'MLP':
         model = models.mlp(model_config)
     else:
         raise NotImplementedError(
@@ -21,14 +22,7 @@ def choose_model(model_config):
     return model
 
 
-def train_model(model_config):
-    model = choose_model(model_config)
-    dataset = MNISTDataset(model_config)
-    net = NNModel(dataset, model, model_config)
-    net.train()
-    return net
-
-def main(report_config='./report_config.json'):
+def main(report_config='./report_config.json', render_reports=True):
     '''
     TRAIN_ALL(report_config): Main file of the project.
 
@@ -48,7 +42,7 @@ def main(report_config='./report_config.json'):
         config = json.load(handle)
 
     # find model configs to train
-    if len(config['models_to_train'])==0:
+    if len(config['models_to_train']) == 0:
         search_pattern = os.path.join(config['model_config_folder'], '*.json')
         models_to_train = [fn for fn in glob.glob(search_pattern)]
 
@@ -62,9 +56,11 @@ def main(report_config='./report_config.json'):
         net.to_json()
 
     # generate report
-    _, _ = make_reports(train_log_dir=config['train_log_dir'],
-                        doc=config['documenttitle'])
+    if render_reports:
+        _, _ = make_reports(train_log_dir=config['train_log_dir'],
+                            doc=config['documenttitle'])
     return
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()

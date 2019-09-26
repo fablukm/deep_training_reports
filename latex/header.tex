@@ -1,0 +1,63 @@
+%#%% HEDAER FOR KERAS REPORTS %%%
+\usepackage[T1]{fontenc}
+\usepackage[headheight=1.5cm,top=3cm,left=2cm,right=2cm]{geometry}
+\usepackage{amsfonts}
+\usepackage{helvet}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%# For the No. sign
+\usepackage{stackengine}
+\newcommand\No[1][.13ex]{%
+  \setbox0=\hbox{\scalebox{.7}{o}}%
+  \setbox2=\hbox{N}%
+  N\kern-.05em\stackengine{\dimexpr\ht0-\ht2+#1}{\belowbaseline[-\ht2]{\copy0}}%
+    {\rule[-.13ex]{.7\wd0}{.13ex}}%
+    {U}{c}{F}{F}{L}%
+}
+
+%# for plots
+\usepackage{pbox}
+\usepackage{pgf,tikz,pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\definecolor{qqqqff}{rgb}{0,0,1}
+\definecolor{ffqqqq}{rgb}{1,0,0}
+
+\usepackage{color, colortbl}
+\usetikzlibrary{arrows,positioning}
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{10pt}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.0pt}
+\fancyhf{}
+
+
+\renewcommand{\labelenumii}{\theenumii}
+\renewcommand{\theenumii}{\theenumi.\arabic{enumii}.}
+\usepackage{enumitem}
+
+\usepackage{listings}
+
+\newcommand{\dev}[1]{{\sc #1}}
+
+\usepackage{siunitx}
+\usepackage{tabularx}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}

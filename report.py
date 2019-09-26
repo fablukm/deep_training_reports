@@ -24,13 +24,18 @@ latex_jinja_env = jinja2.Environment(
 
 def _optimizer_names(keyword):
     dict = {'sgd': "Stochastic Gradient Descent",
-            'rmsprop': "RMSProp ",
+            'rmsprop': "RMSProp",
             'adagrad': "AdaGrad (Duchi et al. 2011)",
             'adadelta': "ADADELTA (Zeiler, 2012)",
             'adam': "Adam (Kingma et al., 2015)",
             'adamax': "AdaMax (Kingma et al., 2015)",
             'nadam': "Nadam (Nesterov-Adam), Dozat, 2016"}
-    return dict[keyword]
+    try:
+        out = dict[keyword]
+        print(out)
+    except KeyError:
+        out = keyword.capitalize()
+    return out
 
 
 def get_tikz_strings(model_dict, do_hist=True):
@@ -64,6 +69,9 @@ def get_tikz_strings(model_dict, do_hist=True):
             else:
                 plt.ylabel(metric_disp)
             min_metric = float(min(hist[metric]))
+
+            min_loss = min([float(x) for x in hist['loss']+hist['val_loss']])
+            max_loss = max([float(x) for x in hist['loss']+hist['val_loss']])
             ymin, ymax = .9*min(round(min_metric, 1), 0.8), 1.025
             yval = [float(val) for val in hist[metric]]
 
@@ -95,8 +103,9 @@ def get_tikz_strings(model_dict, do_hist=True):
 
         #y axis
         plt.ylabel('Loss')
-        min_metric, max_metric = float(min(hist[metric])), float(max(hist[metric]))
-        ymin, ymax = .6*min(round(min_metric, 1), 0.5), max_metric*1.3
+        min_loss = min([float(x) for x in hist['loss']+hist['val_loss']])
+        max_loss = max([float(x) for x in hist['loss']+hist['val_loss']])
+        ymin, ymax = .6*min(round(min_loss, 0), 0.5), max_loss*1.3
         yval = [float(val) for val in hist[metric]]
 
 
@@ -230,10 +239,12 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
         model_dict['training']['optim_config'] = temp
 
         # rename optimizer
+        print(model_dict['training']['optimizer'])
         try:
             model_dict['training']['optimizer'] = _optimizer_names(model_dict['training']['optimizer'])
         except KeyError:
             pass
+        print(model_dict['training']['optimizer'])
 
         # datetime
         timestamp = datetime.strptime(
@@ -283,6 +294,9 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
     rendered = templ.render(summaries=summaries, model_list=unique_models, doc=doc)
     compile_tex(rendered, out_dir)
     return summaries, unique_models
+
+
+
 
 
 if __name__ == '__main__':
