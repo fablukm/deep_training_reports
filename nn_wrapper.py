@@ -10,6 +10,7 @@ import json
 from datetime import datetime
 import cpuinfo
 
+
 def _optimizer_loader(keyword):
     dict = {'sgd': keras.optimizers.SGD,
             'rmsprop': keras.optimizers.RMSprop,
@@ -20,6 +21,7 @@ def _optimizer_loader(keyword):
             'nadam': keras.optimizers.Nadam}
     return dict[keyword]
 
+
 class NeuralNetWrapper(object):
     def __init__(self, dataset, model, config):
         self.dataset = dataset
@@ -29,9 +31,11 @@ class NeuralNetWrapper(object):
     def train(self):
         # get optimizer
         try:
-            optimizer = _optimizer_loader(self.config['training']['optimizer'])(**self.config['training']['optim_config'])
+            optimizer = _optimizer_loader(self.config['training']['optimizer'])(
+                **self.config['training']['optim_config'])
         except KeyError:
-            raise NotImplementedError('Optimizer {} has not yet been implemented in nn_model/_optimizer_loader'.format(self.config['training']['optimizer']))
+            raise NotImplementedError(
+                'Optimizer {} has not yet been implemented in nn_model/_optimizer_loader'.format(self.config['training']['optimizer']))
         # compile model
         self.model.compile(optimizer=self.config['training']['optimizer'],
                            loss=self.config['training']['loss'],
@@ -41,8 +45,8 @@ class NeuralNetWrapper(object):
         self._get_datasets()
 
         # TRAINING
-        #callbacks
-        #TODO: make configurable
+        # callbacks
+        # TODO: make configurable
         reduce_lr = ReduceLROnPlateau(monitor='val_acc', patience=2)
 
         now = datetime.now()
@@ -50,7 +54,8 @@ class NeuralNetWrapper(object):
             self.model.fit(x=self.training_set['inputs'],
                            y=self.training_set['labels'],
                            epochs=self.config['training']['n_epochs'],
-                           validation_data=(self.test_set['inputs'], self.test_set['labels']),
+                           validation_data=(
+                               self.test_set['inputs'], self.test_set['labels']),
                            batch_size=self.config['training']['batch_size'],
                            shuffle=self.config['training']['shuffle'],
                            callbacks=[reduce_lr],
@@ -104,8 +109,9 @@ class NeuralNetWrapper(object):
         '''
         n_samples = 4  # hardcoded for subplot simplicity and minor importance.
         x_test, y_test = self.test_set['inputs'], self.test_set['labels']
-        if idc=='random':
-            idc = np.random.randint(low=0, high=x_test.shape[0]-1, size=n_samples)
+        if idc == 'random':
+            idc = np.random.randint(
+                low=0, high=x_test.shape[0]-1, size=n_samples)
 
         plt.figure()
         for i_sample in range(n_samples):
@@ -115,13 +121,14 @@ class NeuralNetWrapper(object):
             img, label = x_test[idx, :], y_test[idx, :]
 
             pred = np.argmax(self.model.predict(np.expand_dims(img, axis=0),
-                                      verbose=0).squeeze())
+                                                verbose=0).squeeze())
 
             # plot now
             plt.imshow(np.concatenate(3*[img], axis=-1))
             plt.axis('off')
             label = np.argmax(label)
-            plt.title('Sample: {}: Label={}, Prediction={}'.format(idx, i_sample, label))
+            plt.title('Sample: {}: Label={}, Prediction={}'.format(
+                idx, i_sample, label))
 
         if do_plot:
             plt.show()
@@ -151,7 +158,7 @@ class NeuralNetWrapper(object):
                          'batch_size': self.config['training']['batch_size'],
                          'shuffle': self.config['training']['shuffle'],
                          'history': hist_str,
-                         #'test_accuracies': self._evaluate_model_str()
+                         # 'test_accuracies': self._evaluate_model_str()
                          }
 
         # data related to the data set

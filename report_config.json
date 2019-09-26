@@ -3,5 +3,7 @@
 "models_to_train": [],
 "train_log_dir": "D:\\code_d\\deep_training_reports\\training_logs",
 "documenttitle": {"title": "MNIST Training",
-                  "author": "Document Author"}
+                  "author": "Document Author"},
+"render_folder": "reports",
+"report_filename": "report_MNIST"
 }

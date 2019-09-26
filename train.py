@@ -58,6 +58,8 @@ def main(report_config='./report_config.json', render_reports=True):
     # generate report
     if render_reports:
         _, _ = make_reports(train_log_dir=config['train_log_dir'],
+                            out_dir=config['render_folder'],
+                            out_filename=config['report_MNIST']
                             doc=config['documenttitle'])
     return
 

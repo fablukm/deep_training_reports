@@ -22,6 +22,7 @@ latex_jinja_env = jinja2.Environment(
     autoescape=False,
     loader=jinja2.FileSystemLoader('./latex'))
 
+
 def _optimizer_names(keyword):
     dict = {'sgd': "Stochastic Gradient Descent",
             'rmsprop': "RMSProp (Hinton et al. 2014)",
@@ -46,11 +47,11 @@ def get_tikz_strings(model_dict, do_hist=True):
     plt.figure()
     for key in model_dict['training']['metrics']:
         key_disp_stem = key.replace('_', ' ').capitalize()
-        if key=='accuracy':
+        if key == 'accuracy':
             key = 'acc'
 
         for metric in [key, 'val_'+key]:
-            if metric[:3]=='val':
+            if metric[:3] == 'val':
                 marker = 'o--'
                 metric_disp = 'Test ' + key_disp_stem
             else:
@@ -62,7 +63,7 @@ def get_tikz_strings(model_dict, do_hist=True):
             plt.xlabel('Epoch')
             plt.xticks(epochs)
 
-            #y axis
+            # y axis
             if len(model_dict['training']['metrics']) > 1:
                 plt.ylabel('Metric')
             else:
@@ -78,8 +79,8 @@ def get_tikz_strings(model_dict, do_hist=True):
             plt.axis([xmin, xmax, ymin, ymax])
             # plot
             plt.plot(epochs[:len(yval)], yval, marker, label=metric_disp,
-                                           markersize=5,
-                                           linewidth=1)
+                     markersize=5,
+                     linewidth=1)
         # horizontal line at y=1
     plt.plot([xmin, xmax], [1., 1.], 'k:', linewidth=1)
     plt.title(r'{\bf Progression of Evaluation metrics}')
@@ -91,33 +92,32 @@ def get_tikz_strings(model_dict, do_hist=True):
     plt.close()
     fig = plt.figure()
     for metric in ['loss', 'val_loss']:
-        metric_disp = 'Training Loss' if metric=='loss' else 'Test Loss'
+        metric_disp = 'Training Loss' if metric == 'loss' else 'Test Loss'
 
-        marker = 'o--' if metric[:3]=='val' else 'x--'
+        marker = 'o--' if metric[:3] == 'val' else 'x--'
 
         # x axis
         xmin, xmax = epochs[0]-.5, epochs[-1]+.5
         plt.xlabel('Epoch')
         plt.xticks(epochs)
 
-        #y axis
+        # y axis
         plt.ylabel('Loss')
         min_loss = min([float(x) for x in hist['loss']+hist['val_loss']])
         max_loss = max([float(x) for x in hist['loss']+hist['val_loss']])
         ymin, ymax = .6*min(round(min_loss, 0), 0.5), max_loss*1.3
         yval = [float(val) for val in hist[metric]]
 
-
         # axis limits
         plt.axis([xmin, xmax, ymin, ymax])
         # plot
         plt.plot(epochs[:len(yval)], yval, marker, label=metric_disp,
-                                       markersize=5,
-                                       linewidth=1)
+                 markersize=5,
+                 linewidth=1)
     plt.legend(loc='upper right')
     plt.title(r'{\bf Progression of loss function}')
     tikz_loss = tikzplotlib.get_tikz_code(extra_axis_parameters={'font=\small'},
-                                         strict=True)
+                                          strict=True)
 
     ######################################
     # learning rate
@@ -129,7 +129,7 @@ def get_tikz_strings(model_dict, do_hist=True):
     plt.xlabel('Epoch')
     plt.xticks(epochs)
 
-    #y axis
+    # y axis
     plt.ylabel('Learning Rate')
     min_lr, max_lr = float(min(hist['lr'])), float(max(hist['lr']))
     ymin, ymax = .6*min(round(min_lr, 1), 0.5), max_lr*1.3
@@ -139,12 +139,12 @@ def get_tikz_strings(model_dict, do_hist=True):
     plt.axis([xmin, xmax, ymin, ymax])
     # plot
     plt.plot(epochs[:len(yval)], yval, marker, label='Learning Rate',
-                                   markersize=5,
-                                   linewidth=1)
+             markersize=5,
+             linewidth=1)
     plt.legend(loc='upper right')
     plt.title(r'{\bf Progression of Learning rate}')
     tikz_lr = tikzplotlib.get_tikz_code(extra_axis_parameters={'font=\small'},
-                                         strict=True)
+                                        strict=True)
 
     out_dict = {'loss': tikz_loss, 'acc': tikz_acc, 'lr': tikz_lr}
     return out_dict
@@ -154,12 +154,12 @@ def str_to_latex(string):
     return string.replace('\\', r'\textbackslash ').replace('_', '\_')
 
 
-def compile_tex(rendered_tex, out_pdf_path):
+def compile_tex(rendered_tex, out_pdf_path, render_filename='report'):
     tmp_dir = tempfile.mkdtemp()
-    in_tmp_path = os.path.join(tmp_dir, 'rendered.tex')
+    in_tmp_path = os.path.join(tmp_dir, render_filename+'.tex')
     with open(in_tmp_path, 'w') as outfile:
         outfile.write(rendered_tex)
-    out_tmp_path = os.path.join(tmp_dir, 'rendered.tex')
+    out_tmp_path = os.path.join(tmp_dir, render_filename+'.tex')
     cwd = os.getcwd()
     os.chdir(out_pdf_path)
     latex_jinja_env.loader = jinja2.FileSystemLoader('./latex')
@@ -181,7 +181,7 @@ def clean_latex(folder):
     return
 
 
-def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./reports'):
+def make_reports(train_log_dir, doc, out_dir='reports', out_filename='rendered', template_name='template.tex'):
     # define processing function
     def _process_dict(model_dict):
         # rounding accuracies
@@ -191,7 +191,8 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
             100*float(model_dict['training']['history']['acc'][-1]), 2))
 
         # correct n_epochs in case of early stopping
-        model_dict['training']['epochs'] = len(model_dict['training']['history']['loss'])
+        model_dict['training']['epochs'] = len(
+            model_dict['training']['history']['loss'])
 
         # boolean to yes/no string
         model_dict['training']['shuffle'] = "Yes" if model_dict['training']['shuffle'] else "No"
@@ -199,7 +200,7 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
         # add layertype to inbound layers to enable colouring of inbound layers
         layerno = 0
         for layer in model_dict['model']['layers']:
-            layer['number'] = '' if layer['layertype']=='Activation' else layerno
+            layer['number'] = '' if layer['layertype'] == 'Activation' else layerno
             in_layers = layer['inbound_layers']
             layer['inbound_layers'] = []
             for k in range(len(in_layers)):
@@ -209,7 +210,7 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
                 in_dict = {'name': in_layer.replace(
                     '_', '\_').strip(), 'layertype': layertype}
                 layer['inbound_layers'].append(in_dict)
-            layerno = layerno if layer['layertype']=='Activation' else layerno+1
+            layerno = layerno if layer['layertype'] == 'Activation' else layerno+1
 
         # layer names formatting
         for layer in model_dict['model']['layers']:
@@ -233,13 +234,15 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
         # make optimizer config latex-friendly
         temp = {}
         for key in model_dict['training']['optim_config'].keys():
-            new_key = 'Learning Rate' if key=='lr' else key.replace('_', ' ').capitalize()
+            new_key = 'Learning Rate' if key == 'lr' else key.replace(
+                '_', ' ').capitalize()
             temp[new_key] = model_dict['training']['optim_config'][key]
         model_dict['training']['optim_config'] = temp
 
         # rename optimizer
         try:
-            model_dict['training']['optimizer'] = _optimizer_names(model_dict['training']['optimizer'])
+            model_dict['training']['optimizer'] = _optimizer_names(
+                model_dict['training']['optimizer'])
         except KeyError:
             pass
 
@@ -283,26 +286,19 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
     unique_modelnames = set([summary['model']['name']
                              for summary in summaries])
     unique_models = [{'modelname': modelname, 'model_idc': [k for k in range(len(
-        summaries)) if modelname==summaries[k]['model']['name']]} for modelname in unique_modelnames]
+        summaries)) if modelname == summaries[k]['model']['name']]} for modelname in unique_modelnames]
 
     # generate pdf
     fn = 'template.tex'
     templ = latex_jinja_env.get_template(fn)
-    rendered = templ.render(summaries=summaries, model_list=unique_models, doc=doc)
-    compile_tex(rendered, out_dir)
+    rendered = templ.render(summaries=summaries,
+                            model_list=unique_models, doc=doc)
+    compile_tex(rendered_tex=rendered, out_pdf_path=out_dir,
+                render_filename=out_filename)
     return summaries, unique_models
 
 
-
-
-
 if __name__ == '__main__':
-    # fn = 'template.tex'
-    # templ=latex_jinja_env.get_template(fn)
-    # model = {'name': 'UnetVanilla',
-    #         'layers': ['xox', 'ly', 'nah']}
-    # rendered = templ.render(model=model)
-    # compile_tex(rendered, './reports')
-
-    train_log_dir= r'D:\code_d\deep_training_reports\training_logs'
-    ms, un = make_reports(train_log_dir, doc={'title':'TITLE', 'author':'AUTHOR'})
+    train_log_dir = r'D:\code_d\deep_training_reports\training_logs'
+    ms, un = make_reports(train_log_dir, doc={
+                          'title': 'TITLE', 'author': 'AUTHOR'})
