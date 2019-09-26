@@ -24,7 +24,14 @@ You can change the output directories, the document name and authors in the conf
 __If you do not want to generate a summary of all sudies saved in `training_logs`__, you can specify a list of filenames in `report_config.json`. The report generator will only consider files passed in this list.
 
 ## Configuration
+All configurations are `.json`, as the best available compromise between human and machine readability.
 ### Configuration of the reporting tool `report_config.json`
+The following keys are specified therein:
+| Key | Default | Description |
+|-----|---------|-------------|
+|`model_config_folder`|`training_logs`|Folder where the configurations of each study are saved|
+|`models_to_train`|`[]`|List of filenames within `model_config_folder`. If non-empty, the report will only be generated using the specified files.|
+
 
 
 ## Example
