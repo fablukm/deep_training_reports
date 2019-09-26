@@ -1,8 +1,5 @@
 # personal config
 */__pycache__
-training_logs/*.json
-reports/*.pdf
-reports/*.tex
 weights/*.h5
 
 # Byte-compiled / optimized / DLL files
