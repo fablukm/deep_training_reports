@@ -173,7 +173,7 @@ def clean_latex(folder):
     return
 
 
-def make_reports(json_dir, doc, template_name='template.tex', out_dir='./reports'):
+def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./reports'):
     # define processing function
     def _process_dict(model_dict):
         # rounding accuracies
@@ -257,14 +257,14 @@ def make_reports(json_dir, doc, template_name='template.tex', out_dir='./reports
     summaries = []
 
     count = 1
-    for item in os.listdir(json_dir):
+    for item in os.listdir(train_log_dir):
         # skip non json files
         if not item.endswith('.json'):
             print('SKIPPING file {}'.format(item))
             continue
 
         # import json file
-        fullpath = os.path.join(json_dir, item)
+        fullpath = os.path.join(train_log_dir, item)
         with open(fullpath, 'rb') as handle:
             model_dict = _process_dict(json.load(handle))
         model_dict['model']['reportnumber'] = count
@@ -293,5 +293,5 @@ if __name__ == '__main__':
     # rendered = templ.render(model=model)
     # compile_tex(rendered, './reports')
 
-    json_dir= r'D:\code_d\deep_training_reports\training_logs'
-    ms, un = make_reports(json_dir, doc={'title':'TITLE', 'author':'AUTHOR'})
+    train_log_dir= r'D:\code_d\deep_training_reports\training_logs'
+    ms, un = make_reports(train_log_dir, doc={'title':'TITLE', 'author':'AUTHOR'})
