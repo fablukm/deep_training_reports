@@ -1,4 +1,4 @@
-**keras_reports**
+**keras_reports**: Automatic generation of training reports and model comparison in _keras_
 ======
 
 
