@@ -27,6 +27,7 @@ __If you do not want to generate a summary of all sudies saved in `training_logs
 All configurations are `.json`, as the best available compromise between human and machine readability.
 ### Configuration of the reporting tool `report_config.json`
 The following keys are specified therein:
+
 | Key | Default | Description |
 |-----|---------|-------------|
 |`model_config_folder`|`training_logs`|Folder where the configurations of each study are saved|
