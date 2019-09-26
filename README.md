@@ -12,6 +12,15 @@ Training accuracy, loss, and learning rate plots are written in `tikz` and passe
 
 The `.pdf` is rendered from a LaTeX template using Jinja2. This means that the template is __fully customisable__ to fit into conference `.tex` templates, or corporate report layouts.
 
+## Example
+To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
+
+### Example screenshots
+![Frontpage](/reports/frontpage_example.png "Report frontpage")
+![Training plots](/reports/plots_example.png "Training history plots")
+![Study details](/reports/details_example.png "Study details")
+![Architecture](/reports/arch_example.png "Model architecture")
+
 ## Getting started
 1. Define your _keras_ models in `models.py`.
    Write each model configuration to a `.json` in the folder `model_configs`.
@@ -105,11 +114,5 @@ This contains some info about the reporting tool that will be displayed but is b
 
 Layers which are already implemented ([RTFM](https://keras.io/layers/core/)): `InputLayer`, `Conv2D`, `BatchNormalization`, `Dense`, `UpSampling2D`, `MaxPooling2D`, `Activation`, `Dropout`, `Concatenate`, `Flatten`, `Add`.
 
-## Example
-To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
-
-### Example screenshots
-![Frontpage](/reports/frontpage_example.png "Report frontpage")
-![Training plots](/reports/plots_example.png "Training history plots")
-![Study details](/reports/details_example.png "Study details")
-![Architecture](/reports/arch_example.png "Model architecture")
+===
+Fabian Müller, 2019
