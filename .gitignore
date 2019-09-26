@@ -1,7 +1,8 @@
 # personal config
 */__pycache__
-training_logs/*
-reports/*
+training_logs/*.json
+reports/*.pdf
+reports/*.tex
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
