@@ -115,4 +115,5 @@ This contains some info about the reporting tool that will be displayed but is b
 Layers which are already implemented ([RTFM](https://keras.io/layers/core/)): `InputLayer`, `Conv2D`, `BatchNormalization`, `Dense`, `UpSampling2D`, `MaxPooling2D`, `Activation`, `Dropout`, `Concatenate`, `Flatten`, `Add`.
 
 ===
+
 Fabian Müller, 2019
