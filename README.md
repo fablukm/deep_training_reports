@@ -37,6 +37,19 @@ The following keys are specified therein:
 |`render_folder`|`"reports"`|Directory, where the rendered `.tex` and `.pdf` will be stored.|
 |`report_filename`|`"report"`|Filename (without ending) of the rendered `.tex` and `.pdf`.|
 
+### Configuration of each model `model_configs/model_X.json`
+These jsons have four subsections `data`, `model`, `training`, `report`. For your personal needs, you can add fields as you wish.
+
+#### `data` field:
+| Key | Default | Description |
+|-----|---------|-------------|
+|`model_config_folder`|`"model_configs"`|Folder where the configurations of each study are saved.|
+|`models_to_train`|`[]`|List of filenames within `model_config_folder`. If non-empty, the report will only be generated using the specified files.|
+|`train_log_dir`|`"training_logs"`|Directory where after each training step, the summary of the training process will be stored as `.json`.|
+|`documenttitle`|`{"title": "YOURTITLE",`<br>`"author": "YOURNAME"}`|Title and author of the final `.pdf` document.|
+|`render_folder`|`"reports"`|Directory, where the rendered `.tex` and `.pdf` will be stored.|
+|`report_filename`|`"report"`|Filename (without ending) of the rendered `.tex` and `.pdf`.|
+
 
 
 ## Example
