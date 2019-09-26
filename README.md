@@ -44,7 +44,21 @@ These jsons have four subsections `data`, `model`, `training`, `report`. For you
 | Key | Type | Default | Description |
 |-----|---------|---------|-------------|
 |`name`|`str`|no default|Name of your dataset (will appear in report).|
-|`image_size`|tuple of `int`|If you work with image data like I do, here is where you specify to what size the inputs will be downsampled.|
+|`image_size`|list of `int`, length=2|If you work with image data like I do, here is where you specify to what size the inputs will be downsampled.|
+
+#### `model` field:
+Depending on how you are parametrising your model and the layers you are using, different keys will arise here. Attached is an example for MLPs and a simple ConvNet.
+
+| Key | Type | Description |
+|-----|---------|-------------|
+|`name`|`str`|Name of your model (will appear in report).|
+|`filter_sizes`|list of `int`|For each convolutional layer, a filter size|
+|`n_hidden_layers`|`int`|In MLPs where you only work with fully connected layers, this is the number of layers used.|
+|`dense_units`|list of `int`|Per fully connected layer, a number of nodes inside this layer.|
+|`dropout_rates`|`float` between 0 and 1|Per dropout layer, a `keep_prob` between 0 and 1.|
+|`n_classes`|`int`|Number of output classes or masks (used as parameter in model definition).|
+|`is_saved`|`boolean`|If `true`, the weights will be saved after training.|
+|`model_folder`|`str`|If `is_saved` is `true`, this specifies the directory where the weights will be saved.|
 
 
 
