@@ -43,12 +43,13 @@ $\,$\\[-2ex]
 \section{Summary}
 \begin{tabular}{rrrrrrrr}
     \hline\\[-1.5ex]
-    \No{} & Model name & \#Parameters & \#Epochs & Batch size & Test Acc. & Training Acc. \\
+    \No{} & Dataset & Model name & \#Parameters & \#Epochs & Batch size & Test Acc. & Training Acc. \\
     \hline\\[-1.5ex]
 
     %% for summary in summaries
     \hyperref[training:\VAR{summary['model']['reportnumber']}]
              {\VAR{summary['model']['reportnumber']}} &
+    \VAR{summary['data']['name']} &
     \hyperref[model:\VAR{summary['model']['name']}]
              {\VAR{summary['model']['name']}} &
     \num{\VAR{summary['model']['n_params']}} &
@@ -80,22 +81,22 @@ $\,$\\[-2ex]
         \centering
         \begin{subfigure}{.5\textwidth}
             \VAR{summary['plots_tikz']['acc']}
-            \caption{Accuracy learning process for model \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+            \caption{Accuracy learning process for study \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
                         {\VAR{summary['model']['reportnumber']}}.}
         \end{subfigure}%
         \hfill%
         \begin{subfigure}{.5\textwidth}
             \VAR{summary['plots_tikz']['loss']}
-            \caption{Loss learning process for model \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+            \caption{Loss learning process for study \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
                         {\VAR{summary['model']['reportnumber']}}.}
         \end{subfigure}
         \par\bigskip
         \begin{subfigure}{.5\textwidth}
             \VAR{summary['plots_tikz']['lr']}
-            \caption{Learning rate per epoch for model \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+            \caption{Learning rate per epoch for study \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
                         {\VAR{summary['model']['reportnumber']}}.}
         \end{subfigure}%
-        \caption{Training and evaluation metrics for model  \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
+        \caption{Training and evaluation metrics for study  \protect\hyperref[training:\VAR{summary['model']['reportnumber']}]
                     {\VAR{summary['model']['reportnumber']}}.
                 \label{fig:results\VAR{summary['model']['reportnumber']}}}
     \end{figure}

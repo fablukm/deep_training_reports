@@ -18,7 +18,7 @@
     "loss": "categorical_crossentropy",
     "metrics": ["accuracy"],
     "n_epochs": 5,
-    "batch_size": 64,
+    "batch_size": 16,
     "shuffle": true
 },
 "augmentations": {

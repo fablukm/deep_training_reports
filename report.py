@@ -298,7 +298,16 @@ def make_reports(train_log_dir, doc, out_dir='reports', out_filename='rendered',
     return summaries, unique_models
 
 
+def main(report_config='report_config.json'):
+    with open(report_config, 'r') as handle:
+        config = json.load(handle)
+
+    summaries, unique = make_reports(train_log_dir=config['train_log_dir'],
+                                     out_dir=config['render_folder'],
+                                     out_filename=config['report_filename'],
+                                     doc=config['documenttitle'])
+    return summaries, unique
+
+
 if __name__ == '__main__':
-    train_log_dir = r'D:\code_d\deep_training_reports\training_logs'
-    ms, un = make_reports(train_log_dir, doc={
-                          'title': 'TITLE', 'author': 'AUTHOR'})
+    summaries, unique = main()
