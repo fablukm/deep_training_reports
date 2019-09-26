@@ -1,5 +1,23 @@
-**keras_reports**: Automatic generation of training reports and model comparison in _keras_
+**keras_reports**: Automatic generation of training reports and model comparison in keras
 ======
+
+<!-- TOC -->
+
+- [Why](#why)
+- [Example](#example)
+    - [Example screenshots](#example-screenshots)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+    - [Configuration of the reporting tool `report_config.json`](#configuration-of-the-reporting-tool-report_configjson)
+    - [Configuration of each model `model_configs/X.json`](#configuration-of-each-model-model_configsxjson)
+        - [`data` field:](#data-field)
+        - [`model` field:](#model-field)
+        - [`training` field:](#training-field)
+        - [`report` field:](#report-field)
+- [Important modules](#important-modules)
+- [How to implement a new model](#how-to-implement-a-new-model)
+
+<!-- /TOC -->
 
 ## Why
 When training Neural networks, we compare differnet choices of hyperparameters and architectures to determine which model performs best. To compare the different results, metrics need to be written down and put into a table by hand for presentation.
