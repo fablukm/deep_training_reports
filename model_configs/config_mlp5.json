@@ -13,11 +13,8 @@
     "model_folder": "weights"
 },
 "training": {
-    "optimizer": "rmsprop",
-    "optim_config": {
-            "lr": 0.001,
-            "rho": 0.9
-        },
+    "optimizer": "sgd",
+    "optim_config": {},
     "loss": "categorical_crossentropy",
     "metrics": ["accuracy"],
     "n_epochs": 5,

@@ -2,8 +2,8 @@
 \input{../latex/header.tex}
 
 
-\newcommand{\doctitle}{TITLE}
-\newcommand{\docauthor}{AUTHOR}
+\newcommand{\doctitle}{MNIST Training}
+\newcommand{\docauthor}{Document Author}
 
 \title{\doctitle}
 \author{\docauthor}
@@ -54,30 +54,52 @@ $\,$\\[-2ex]
     5
     &
     64 &
-    98.76 \% &
-    99.33 \%
+    98.8 \% &
+    99.41 \%
     \\[4pt]
     \hyperref[training:2]
              {2} &
+    \hyperref[model:ConvNet2layers]
+             {ConvNet2layers} &
+    \num{1199882} &
+    5
+    &
+    64 &
+    98.79 \% &
+    99.4 \%
+    \\[4pt]
+    \hyperref[training:3]
+             {3} &
     \hyperref[model:MLP2layers]
              {MLP2layers} &
     \num{669706} &
     5
     &
     64 &
-    91.15 \% &
-    90.93 \%
+    91.56 \% &
+    90.83 \%
     \\[4pt]
-    \hyperref[training:3]
-             {3} &
+    \hyperref[training:4]
+             {4} &
+    \hyperref[model:MLP2layers]
+             {MLP2layers} &
+    \num{669706} &
+    5
+    &
+    64 &
+    90.62 \% &
+    90.83 \%
+    \\[4pt]
+    \hyperref[training:5]
+             {5} &
     \hyperref[model:MLP5layers]
              {MLP5layers} &
     \num{1457674} &
     5
     &
     64 &
-    92.47 \% &
-    91.97 \%
+    92.23 \% &
+    91.58 \%
     \\[4pt]
     \hline
 \end{tabular}
@@ -123,20 +145,20 @@ ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.960166666666667
-2 0.986
-3 0.989583333333333
-4 0.991933333333333
-5 0.99325
+1 0.955833333333333
+2 0.985266666666667
+3 0.989383333333333
+4 0.993233333333333
+5 0.99405
 };
 \addlegendentry{Training Accuracy}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.985
-2 0.9876
-3 0.9909
-4 0.9899
-5 0.9876
+1 0.9843
+2 0.9893
+3 0.9891
+4 0.9896
+5 0.988
 };
 \addlegendentry{Test Accuracy}
 \addplot [line width=1.0pt, black, dotted, forget plot]
@@ -174,26 +196,26 @@ xtick style={color=black},
 xtick={1,2,3,4,5},
 y grid style={white!69.01960784313725!black},
 ylabel={Loss},
-ymin=0, ymax=0.171749340473488,
+ymin=0, ymax=0.183357900276855,
 ytick style={color=black},
-ytick={0,0.02,0.04,0.06,0.08,0.1,0.12,0.14,0.16,0.18}
+ytick={0,0.025,0.05,0.075,0.1,0.125,0.15,0.175,0.2}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.132114877287298
-2 0.0474134801289377
-3 0.0340738017865612
-4 0.0265769775162839
-5 0.0229504140371146
+1 0.141044538674504
+2 0.0480503634378314
+3 0.0315220580656702
+4 0.0215981675240366
+5 0.0179955877283898
 };
 \addlegendentry{Training Loss}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.045107334170863
-2 0.0389748287099879
-3 0.0276051344647305
-4 0.0308365761081688
-5 0.0468869591456067
+1 0.0452667679298669
+2 0.0344538480416872
+3 0.0343867308962275
+4 0.0330189083915146
+5 0.0417873202452349
 };
 \addlegendentry{Test Loss}
 \end{axis}
@@ -266,36 +288,38 @@ table {%
     \subsubsection*{Training}
     \begin{description}
         \item[Number of epochs] 5
-        \item[Optimizer] RMSProp
+        \item[Optimizer] Adam (Kingma et al., 2015)
 
             \begin{tabular}{rl}
-                    {\bf Learning Rate} & 0.00010000000474974513 \\
-                    {\bf Rho} & 0.8999999761581421 \\
+                    {\bf Learning Rate} & 0.0010000000474974513 \\
+                    {\bf Beta 1} & 0.8999999761581421 \\
+                    {\bf Beta 2} & 0.9990000128746033 \\
                     {\bf Decay} & 0.0 \\
                     {\bf Epsilon} & 1e-07 \\
+                    {\bf Amsgrad} & False \\
             \end{tabular}
 
         \item[Loss] Categorical crossentropy
         \item[Batch size] 64
         \item[Shuffle] Yes
-        \item[Training time] 52 sec
+        \item[Training time] 54 sec
     \end{description}
     %
     \subsubsection*{Platform}
     \begin{description}
-        \item[Weights exported to path] weights\textbackslash ConvNet2layers\_5ep\_MNIST.h5
+            \item[Weights exported to path] weights\textbackslash ConvNet2layers\_5ep\_MNIST.h5
         \item[Device used] GPU (GeForce GTX 1060 6GB)
         \item[CPU] Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz,
                    X86\_64
         \item[Python Version] 3.7.2.final.0 (64 bit)
         \item[Keras Version] 2.2.5 (Backend: tensorflow)
         \item[Tensorflow Version] 1.14.0
-        \item[Timestamp] 26.09.2019 at 10:07
+        \item[Timestamp] 26.09.2019 at 11:15
     \end{description}
     \newpage
     %
     \subsection{Model 2:
-                        MLP2layers
+                        ConvNet2layers
                 \label{training:2}
                 }
     %
@@ -331,20 +355,20 @@ ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.871483333333333
-2 0.89645
-3 0.90305
-4 0.905816666666667
-5 0.909333333333333
+1 0.956533333333333
+2 0.985
+3 0.990933333333333
+4 0.992283333333333
+5 0.993983333333333
 };
 \addlegendentry{Training Accuracy}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.8819
-2 0.9097
-3 0.8972
-4 0.9127
-5 0.9115
+1 0.9844
+2 0.9864
+3 0.9889
+4 0.9908
+5 0.9879
 };
 \addlegendentry{Test Accuracy}
 \addplot [line width=1.0pt, black, dotted, forget plot]
@@ -382,26 +406,26 @@ xtick style={color=black},
 xtick={1,2,3,4,5},
 y grid style={white!69.01960784313725!black},
 ylabel={Loss},
-ymin=0, ymax=0.586448700480461,
+ymin=0, ymax=0.186121125787348,
 ytick style={color=black},
-ytick={0,0.1,0.2,0.3,0.4,0.5,0.6}
+ytick={0,0.025,0.05,0.075,0.1,0.125,0.15,0.175,0.2}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.45111438498497
-2 0.36865783469677
-3 0.345719545857112
-4 0.33494815762043
-5 0.327389693391323
+1 0.143170096759498
+2 0.0476837281799565
+3 0.0299863678362376
+4 0.0234973073229504
+5 0.0185393210380261
 };
 \addlegendentry{Training Loss}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.405732521235943
-2 0.322877946376801
-3 0.356435169196129
-4 0.30648259422183
-5 0.330229531121254
+1 0.0472859071072191
+2 0.0413666704475414
+3 0.0346961194077565
+4 0.0283864521988435
+5 0.0420626939387235
 };
 \addlegendentry{Test Loss}
 \end{axis}
@@ -474,36 +498,38 @@ table {%
     \subsubsection*{Training}
     \begin{description}
         \item[Number of epochs] 5
-        \item[Optimizer] RMSProp
+        \item[Optimizer] Adam (Kingma et al., 2015)
 
             \begin{tabular}{rl}
                     {\bf Learning Rate} & 0.0010000000474974513 \\
-                    {\bf Rho} & 0.8999999761581421 \\
+                    {\bf Beta 1} & 0.8999999761581421 \\
+                    {\bf Beta 2} & 0.9990000128746033 \\
                     {\bf Decay} & 0.0 \\
                     {\bf Epsilon} & 1e-07 \\
+                    {\bf Amsgrad} & False \\
             \end{tabular}
 
         \item[Loss] Categorical crossentropy
         \item[Batch size] 64
         \item[Shuffle] Yes
-        \item[Training time] 29 sec
+        \item[Training time] 54 sec
     \end{description}
     %
     \subsubsection*{Platform}
     \begin{description}
-        \item[Weights exported to path] weights\textbackslash MLP2layers\_5ep\_MNIST.h5
+            \item[Weights exported to path] weights\textbackslash ConvNet2layers\_5ep\_MNIST.h5
         \item[Device used] GPU (GeForce GTX 1060 6GB)
         \item[CPU] Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz,
                    X86\_64
         \item[Python Version] 3.7.2.final.0 (64 bit)
         \item[Keras Version] 2.2.5 (Backend: tensorflow)
         \item[Tensorflow Version] 1.14.0
-        \item[Timestamp] 26.09.2019 at 10:08
+        \item[Timestamp] 26.09.2019 at 11:17
     \end{description}
     \newpage
     %
     \subsection{Model 3:
-                        MLP5layers
+                        MLP2layers
                 \label{training:3}
                 }
     %
@@ -539,20 +565,20 @@ ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.781516666666667
-2 0.854433333333333
-3 0.870516666666667
-4 0.915816666666667
-5 0.91965
+1 0.872283333333333
+2 0.896633333333333
+3 0.904066666666667
+4 0.905183333333333
+5 0.908316666666667
 };
 \addlegendentry{Training Accuracy}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.8675
-2 0.8598
-3 0.826
-4 0.9223
-5 0.9247
+1 0.8476
+2 0.8831
+3 0.887
+4 0.9039
+5 0.9156
 };
 \addlegendentry{Test Accuracy}
 \addplot [line width=1.0pt, black, dotted, forget plot]
@@ -590,26 +616,26 @@ xtick style={color=black},
 xtick={1,2,3,4,5},
 y grid style={white!69.01960784313725!black},
 ylabel={Loss},
-ymin=0, ymax=1.08574285008748,
+ymin=0, ymax=0.701970990095139,
 ytick style={color=black},
-ytick={0,0.2,0.4,0.6,0.8,1,1.2}
+ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8}
 ]
 \addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
 table {%
-1 0.835186807759603
-2 0.500995210758845
-3 0.446815415763855
-4 0.30130756948789
-5 0.288122650122643
+1 0.451015387845039
+2 0.365768517072996
+3 0.346183362762133
+4 0.334059917656581
+5 0.32713860236605
 };
 \addlegendentry{Training Loss}
 \addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
 table {%
-1 0.464935952138901
-2 0.453388179993629
-3 0.575645192313194
-4 0.283792906475067
-5 0.273271721291542
+1 0.539977684688568
+2 0.389113553929329
+3 0.405812310814857
+4 0.333861441612244
+5 0.31223069010973
 };
 \addlegendentry{Test Loss}
 \end{axis}
@@ -650,8 +676,8 @@ table {%
 1 0.001
 2 0.001
 3 0.001
-4 0.000100000005
-5 0.000100000005
+4 0.001
+5 0.001
 };
 \addlegendentry{Learning Rate}
 \end{axis}
@@ -682,10 +708,10 @@ table {%
     \subsubsection*{Training}
     \begin{description}
         \item[Number of epochs] 5
-        \item[Optimizer] RMSProp
+        \item[Optimizer] RMSProp (Hinton et al. 2014)
 
             \begin{tabular}{rl}
-                    {\bf Learning Rate} & 0.00010000000474974513 \\
+                    {\bf Learning Rate} & 0.0010000000474974513 \\
                     {\bf Rho} & 0.8999999761581421 \\
                     {\bf Decay} & 0.0 \\
                     {\bf Epsilon} & 1e-07 \\
@@ -694,31 +720,449 @@ table {%
         \item[Loss] Categorical crossentropy
         \item[Batch size] 64
         \item[Shuffle] Yes
-        \item[Training time] 39 sec
+        \item[Training time] 28 sec
     \end{description}
     %
     \subsubsection*{Platform}
     \begin{description}
-        \item[Weights exported to path] weights\textbackslash MLP5layers\_5ep\_MNIST.h5
+            \item[Weights exported to path] weights\textbackslash MLP2layers\_5ep\_MNIST.h5
         \item[Device used] GPU (GeForce GTX 1060 6GB)
         \item[CPU] Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz,
                    X86\_64
         \item[Python Version] 3.7.2.final.0 (64 bit)
         \item[Keras Version] 2.2.5 (Backend: tensorflow)
         \item[Tensorflow Version] 1.14.0
-        \item[Timestamp] 26.09.2019 at 10:09
+        \item[Timestamp] 26.09.2019 at 11:16
+    \end{description}
+    \newpage
+    %
+    \subsection{Model 4:
+                        MLP2layers
+                \label{training:4}
+                }
+    %
+    \paragraph*{Training history} See Figure \ref{fig:results4}.
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{.5\textwidth}
+            % This file was created by tikzplotlib v0.8.2.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
+\begin{axis}[
+font=\small,
+legend cell align={left},
+legend style={at={(0.97,0.03)}, anchor=south east, draw=white!80.0!black},
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=both,
+title={{\bf Progression of Evaluation metrics}},
+x grid style={white!69.01960784313725!black},
+xlabel={Epoch},
+xmin=0.5, xmax=5.5,
+xtick style={color=black},
+xtick={1,2,3,4,5},
+y grid style={white!69.01960784313725!black},
+ylabel={Test Accuracy},
+ymin=0.72, ymax=1.025,
+ytick style={color=black},
+ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
+]
+\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
+table {%
+1 0.870016666666667
+2 0.897333333333333
+3 0.902666666666667
+4 0.905283333333333
+5 0.90825
+};
+\addlegendentry{Training Accuracy}
+\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
+table {%
+1 0.8892
+2 0.8962
+3 0.8988
+4 0.9128
+5 0.9062
+};
+\addlegendentry{Test Accuracy}
+\addplot [line width=1.0pt, black, dotted, forget plot]
+table {%
+0.5 1
+5.5 1
+};
+\end{axis}
+
+\end{tikzpicture}
+            \caption{Accuracy learning process for model \protect\hyperref[training:4]
+                        {4}.}
+        \end{subfigure}%
+        \hfill%
+        \begin{subfigure}{.5\textwidth}
+            % This file was created by tikzplotlib v0.8.2.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
+\begin{axis}[
+font=\small,
+legend cell align={left},
+legend style={draw=white!80.0!black},
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=both,
+title={{\bf Progression of loss function}},
+x grid style={white!69.01960784313725!black},
+xlabel={Epoch},
+xmin=0.5, xmax=5.5,
+xtick style={color=black},
+xtick={1,2,3,4,5},
+y grid style={white!69.01960784313725!black},
+ylabel={Loss},
+ymin=0, ymax=0.590860470925967,
+ytick style={color=black},
+ytick={0,0.1,0.2,0.3,0.4,0.5,0.6}
+]
+\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
+table {%
+1 0.454508054558436
+2 0.367430510119597
+3 0.345903011814753
+4 0.33594228331248
+5 0.327678761124611
+};
+\addlegendentry{Training Loss}
+\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
+table {%
+1 0.384877482664585
+2 0.353681664657593
+3 0.350747397780418
+4 0.313566479516029
+5 0.322905527448654
+};
+\addlegendentry{Test Loss}
+\end{axis}
+
+\end{tikzpicture}
+            \caption{Loss learning process for model \protect\hyperref[training:4]
+                        {4}.}
+        \end{subfigure}
+        \par\bigskip
+        \begin{subfigure}{.5\textwidth}
+            % This file was created by tikzplotlib v0.8.2.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+font=\small,
+legend cell align={left},
+legend style={draw=white!80.0!black},
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=both,
+title={{\bf Progression of Learning rate}},
+x grid style={white!69.01960784313725!black},
+xlabel={Epoch},
+xmin=0.5, xmax=5.5,
+xtick style={color=black},
+xtick={1,2,3,4,5},
+y grid style={white!69.01960784313725!black},
+ylabel={Learning Rate},
+ymin=0, ymax=0.0013,
+ytick style={color=black},
+ytick={0,0.0002,0.0004,0.0006,0.0008,0.001,0.0012,0.0014}
+]
+\addplot [line width=1.0pt, color0, dashed, mark=*, mark size=2, mark options={solid}]
+table {%
+1 0.001
+2 0.001
+3 0.001
+4 0.001
+5 0.001
+};
+\addlegendentry{Learning Rate}
+\end{axis}
+
+\end{tikzpicture}
+            \caption{Learning rate per epoch for model \protect\hyperref[training:4]
+                        {4}.}
+        \end{subfigure}%
+        \caption{Training and evaluation metrics for model  \protect\hyperref[training:4]
+                    {4}.
+                \label{fig:results4}}
+    \end{figure}
+
+    \subsubsection*{Dataset}
+    \begin{description}
+        \item[Name] MNIST
+        \item[Train-Test-Dev split:] {\it Training set:}
+        60000,
+        {\it Test set:}
+        10000,
+        {\it Dev set:}
+        0,
+        \item[Image size] [28, 28]
+
+
+    \end{description}
+    %
+    \subsubsection*{Training}
+    \begin{description}
+        \item[Number of epochs] 5
+        \item[Optimizer] RMSProp (Hinton et al. 2014)
+
+            \begin{tabular}{rl}
+                    {\bf Learning Rate} & 0.0010000000474974513 \\
+                    {\bf Rho} & 0.8999999761581421 \\
+                    {\bf Decay} & 0.0 \\
+                    {\bf Epsilon} & 1e-07 \\
+            \end{tabular}
+
+        \item[Loss] Categorical crossentropy
+        \item[Batch size] 64
+        \item[Shuffle] Yes
+        \item[Training time] 27 sec
+    \end{description}
+    %
+    \subsubsection*{Platform}
+    \begin{description}
+            \item[Weights exported to path] weights\textbackslash MLP2layers\_5ep\_MNIST.h5
+        \item[Device used] GPU (GeForce GTX 1060 6GB)
+        \item[CPU] Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz,
+                   X86\_64
+        \item[Python Version] 3.7.2.final.0 (64 bit)
+        \item[Keras Version] 2.2.5 (Backend: tensorflow)
+        \item[Tensorflow Version] 1.14.0
+        \item[Timestamp] 26.09.2019 at 11:18
+    \end{description}
+    \newpage
+    %
+    \subsection{Model 5:
+                        MLP5layers
+                \label{training:5}
+                }
+    %
+    \paragraph*{Training history} See Figure \ref{fig:results5}.
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{.5\textwidth}
+            % This file was created by tikzplotlib v0.8.2.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
+\begin{axis}[
+font=\small,
+legend cell align={left},
+legend style={at={(0.97,0.03)}, anchor=south east, draw=white!80.0!black},
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=both,
+title={{\bf Progression of Evaluation metrics}},
+x grid style={white!69.01960784313725!black},
+xlabel={Epoch},
+xmin=0.5, xmax=5.5,
+xtick style={color=black},
+xtick={1,2,3,4,5},
+y grid style={white!69.01960784313725!black},
+ylabel={Test Accuracy},
+ymin=0.72, ymax=1.025,
+ytick style={color=black},
+ytick={0.7,0.75,0.8,0.85,0.9,0.95,1,1.05}
+]
+\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
+table {%
+1 0.861
+2 0.903333333333333
+3 0.910366666666667
+4 0.9117
+5 0.9158
+};
+\addlegendentry{Training Accuracy}
+\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
+table {%
+1 0.9128
+2 0.9166
+3 0.9184
+4 0.9202
+5 0.9223
+};
+\addlegendentry{Test Accuracy}
+\addplot [line width=1.0pt, black, dotted, forget plot]
+table {%
+0.5 1
+5.5 1
+};
+\end{axis}
+
+\end{tikzpicture}
+            \caption{Accuracy learning process for model \protect\hyperref[training:5]
+                        {5}.}
+        \end{subfigure}%
+        \hfill%
+        \begin{subfigure}{.5\textwidth}
+            % This file was created by tikzplotlib v0.8.2.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
+\begin{axis}[
+font=\small,
+legend cell align={left},
+legend style={draw=white!80.0!black},
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=both,
+title={{\bf Progression of loss function}},
+x grid style={white!69.01960784313725!black},
+xlabel={Epoch},
+xmin=0.5, xmax=5.5,
+xtick style={color=black},
+xtick={1,2,3,4,5},
+y grid style={white!69.01960784313725!black},
+ylabel={Loss},
+ymin=0, ymax=0.615243231782913,
+ytick style={color=black},
+ytick={0,0.1,0.2,0.3,0.4,0.5,0.6,0.7}
+]
+\addplot [line width=1.0pt, color0, dashed, mark=x, mark size=2, mark options={solid}]
+table {%
+1 0.473264024448395
+2 0.335183364868164
+3 0.316770740207036
+4 0.309144942204158
+5 0.300196948814392
+};
+\addlegendentry{Training Loss}
+\addplot [line width=1.0pt, color1, dashed, mark=*, mark size=2, mark options={solid}]
+table {%
+1 0.30900994964838
+2 0.296378571462631
+3 0.291983888792992
+4 0.276526245641708
+5 0.277924742972851
+};
+\addlegendentry{Test Loss}
+\end{axis}
+
+\end{tikzpicture}
+            \caption{Loss learning process for model \protect\hyperref[training:5]
+                        {5}.}
+        \end{subfigure}
+        \par\bigskip
+        \begin{subfigure}{.5\textwidth}
+            % This file was created by tikzplotlib v0.8.2.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+font=\small,
+legend cell align={left},
+legend style={draw=white!80.0!black},
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=both,
+title={{\bf Progression of Learning rate}},
+x grid style={white!69.01960784313725!black},
+xlabel={Epoch},
+xmin=0.5, xmax=5.5,
+xtick style={color=black},
+xtick={1,2,3,4,5},
+y grid style={white!69.01960784313725!black},
+ylabel={Learning Rate},
+ymin=0, ymax=0.013,
+ytick style={color=black},
+ytick={0,0.002,0.004,0.006,0.008,0.01,0.012,0.014}
+]
+\addplot [line width=1.0pt, color0, dashed, mark=*, mark size=2, mark options={solid}]
+table {%
+1 0.01
+2 0.01
+3 0.01
+4 0.01
+5 0.01
+};
+\addlegendentry{Learning Rate}
+\end{axis}
+
+\end{tikzpicture}
+            \caption{Learning rate per epoch for model \protect\hyperref[training:5]
+                        {5}.}
+        \end{subfigure}%
+        \caption{Training and evaluation metrics for model  \protect\hyperref[training:5]
+                    {5}.
+                \label{fig:results5}}
+    \end{figure}
+
+    \subsubsection*{Dataset}
+    \begin{description}
+        \item[Name] MNIST
+        \item[Train-Test-Dev split:] {\it Training set:}
+        60000,
+        {\it Test set:}
+        10000,
+        {\it Dev set:}
+        0,
+        \item[Image size] [28, 28]
+
+
+    \end{description}
+    %
+    \subsubsection*{Training}
+    \begin{description}
+        \item[Number of epochs] 5
+        \item[Optimizer] Stochastic Gradient Descent
+
+            \begin{tabular}{rl}
+                    {\bf Learning Rate} & 0.009999999776482582 \\
+                    {\bf Momentum} & 0.0 \\
+                    {\bf Decay} & 0.0 \\
+                    {\bf Nesterov} & False \\
+            \end{tabular}
+
+        \item[Loss] Categorical crossentropy
+        \item[Batch size] 64
+        \item[Shuffle] Yes
+        \item[Training time] 32 sec
+    \end{description}
+    %
+    \subsubsection*{Platform}
+    \begin{description}
+            \item[Weights exported to path] weights\textbackslash MLP5layers\_5ep\_MNIST.h5
+        \item[Device used] GPU (GeForce GTX 1060 6GB)
+        \item[CPU] Intel(R) Xeon(R) CPU E3-1245 v5 @ 3.50GHz,
+                   X86\_64
+        \item[Python Version] 3.7.2.final.0 (64 bit)
+        \item[Keras Version] 2.2.5 (Backend: tensorflow)
+        \item[Tensorflow Version] 1.14.0
+        \item[Timestamp] 26.09.2019 at 11:18
     \end{description}
     \newpage
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Model Architectures}
-\subsection{ConvNet2layers
-            \label{model:ConvNet2layers}
+\subsection{MLP2layers
+            \label{model:MLP2layers}
             }
 \paragraph{Used in \No{}:}
     \hyperref[training:3]
-             {3}
+             {3},
+    \hyperref[training:5]
+             {5}
 \vspace{-2ex}
 %
 \paragraph{Model summary:}$\,$\\
@@ -735,7 +1179,7 @@ table {%
         0
         &
         \color{InputLayer}{
-        input\_1}
+        input\_2}
         \color{InputLayer}{
         (InputLayer)}
         &
@@ -748,137 +1192,94 @@ table {%
         \hline\\[-1.5ex]
         1
         &
-        \color{Conv2D}{
-        conv2d\_1}
-        \color{Conv2D}{
-        (Conv2D)}
+        \color{Flatten}{
+        flatten\_2}
+        \color{Flatten}{
+        (Flatten)}
         &
-        (26, 26, 32)
+        (784,)
         &
-            {\bf Activation:} relu \newline
-            {\bf Kernel Size:} [3, 3] \newline
-            {\bf Stride:} [1, 1] \newline
-            {\bf Dilation:} [1, 1] \newline
-            {\bf Padding:} valid
         &
-        \num{320}
+        \num{0}
         &
         \color{InputLayer}{
-            input\_1}
+            input\_2}
         \\
         \hline\\[-1.5ex]
         2
         &
-        \color{Conv2D}{
-        conv2d\_2}
-        \color{Conv2D}{
-        (Conv2D)}
+        \color{Dense}{
+        dense\_3}
+        \color{Dense}{
+        (Dense)}
         &
-        (24, 24, 64)
+        (512,)
         &
-            {\bf Activation:} relu \newline
-            {\bf Kernel Size:} [3, 3] \newline
-            {\bf Stride:} [1, 1] \newline
-            {\bf Dilation:} [1, 1] \newline
-            {\bf Padding:} valid
+            {\bf \#Neurons:} 512\newline
+            {\bf Activation:} linear
         &
-        \num{18496}
+        \num{401920}
         &
-        \color{Conv2D}{
-            conv2d\_1}
+        \color{Flatten}{
+            flatten\_2}
         \\
         \hline\\[-1.5ex]
         3
         &
-        \color{MaxPooling2D}{
-        max\_pooling2d\_1}
-        \color{MaxPooling2D}{
-        (MaxPooling2D)}
-        &
-        (12, 12, 64)
-        &
-            {\bf Pool size:} [2, 2] \newline
-            {\bf Strides:} [2, 2] \newline
-            {\bf Padding:} valid
-        &
-        \num{0}
-        &
-        \color{Conv2D}{
-            conv2d\_2}
-        \\
-        \hline\\[-1.5ex]
-        4
-        &
         \color{Dropout}{
-        dropout\_1}
+        dropout\_3}
         \color{Dropout}{
         (Dropout)}
         &
-        (12, 12, 64)
+        (512,)
         &
             {\bf Dropout Rate:} 0.0
         &
         \num{0}
         &
-        \color{MaxPooling2D}{
-            max\_pooling2d\_1}
+        \color{Dense}{
+            dense\_3}
+        \\
+        \hline\\[-1.5ex]
+        4
+        &
+        \color{Dense}{
+        dense\_4}
+        \color{Dense}{
+        (Dense)}
+        &
+        (512,)
+        &
+            {\bf \#Neurons:} 512\newline
+            {\bf Activation:} linear
+        &
+        \num{262656}
+        &
+        \color{Dropout}{
+            dropout\_3}
         \\
         \hline\\[-1.5ex]
         5
         &
-        \color{Flatten}{
-        flatten\_1}
-        \color{Flatten}{
-        (Flatten)}
-        &
-        (9216,)
-        &
-        &
-        \num{0}
-        &
         \color{Dropout}{
-            dropout\_1}
-        \\
-        \hline\\[-1.5ex]
-        6
-        &
-        \color{Dense}{
-        dense\_1}
-        \color{Dense}{
-        (Dense)}
-        &
-        (128,)
-        &
-            {\bf \#Neurons:} 128\newline
-            {\bf Activation:} relu
-        &
-        \num{1179776}
-        &
-        \color{Flatten}{
-            flatten\_1}
-        \\
-        \hline\\[-1.5ex]
-        7
-        &
-        \color{Dropout}{
-        dropout\_2}
+        dropout\_4}
         \color{Dropout}{
         (Dropout)}
         &
-        (128,)
+        (512,)
         &
             {\bf Dropout Rate:} 0.2
         &
         \num{0}
         &
         \color{Dense}{
-            dense\_1}
+            dense\_4}
         \\
         \hline\\[-1.5ex]
-        8
+        6
         &
         \color{Dense}{
-        dense\_2}
+        dense\_5}
         \color{Dense}{
         (Dense)}
         &
@@ -887,10 +1288,10 @@ table {%
             {\bf \#Neurons:} 10\newline
             {\bf Activation:} softmax
         &
-        \num{1290}
+        \num{5130}
         &
         \color{Dropout}{
-            dropout\_2}
+            dropout\_4}
         \\
         \hline\\[-1.5ex]
 \end{longtable}
@@ -899,8 +1300,8 @@ table {%
             \label{model:MLP5layers}
             }
 \paragraph{Used in \No{}:}
-    \hyperref[training:3]
-             {3}
+    \hyperref[training:5]
+             {5}
 \vspace{-2ex}
 %
 \paragraph{Model summary:}$\,$\\
@@ -1139,12 +1540,14 @@ table {%
         \hline\\[-1.5ex]
 \end{longtable}
 \newpage
-\subsection{MLP2layers
-            \label{model:MLP2layers}
+\subsection{ConvNet2layers
+            \label{model:ConvNet2layers}
             }
 \paragraph{Used in \No{}:}
-    \hyperref[training:3]
-             {3}
+    \hyperref[training:1]
+             {1},
+    \hyperref[training:5]
+             {5}
 \vspace{-2ex}
 %
 \paragraph{Model summary:}$\,$\\
@@ -1161,7 +1564,7 @@ table {%
         0
         &
         \color{InputLayer}{
-        input\_2}
+        input\_1}
         \color{InputLayer}{
         (InputLayer)}
         &
@@ -1174,94 +1577,137 @@ table {%
         \hline\\[-1.5ex]
         1
         &
-        \color{Flatten}{
-        flatten\_2}
-        \color{Flatten}{
-        (Flatten)}
+        \color{Conv2D}{
+        conv2d\_1}
+        \color{Conv2D}{
+        (Conv2D)}
         &
-        (784,)
+        (26, 26, 32)
         &
+            {\bf Activation:} relu \newline
+            {\bf Kernel Size:} [3, 3] \newline
+            {\bf Stride:} [1, 1] \newline
+            {\bf Dilation:} [1, 1] \newline
+            {\bf Padding:} valid
         &
-        \num{0}
+        \num{320}
         &
         \color{InputLayer}{
-            input\_2}
+            input\_1}
         \\
         \hline\\[-1.5ex]
         2
         &
-        \color{Dense}{
-        dense\_3}
-        \color{Dense}{
-        (Dense)}
+        \color{Conv2D}{
+        conv2d\_2}
+        \color{Conv2D}{
+        (Conv2D)}
         &
-        (512,)
+        (24, 24, 64)
         &
-            {\bf \#Neurons:} 512\newline
-            {\bf Activation:} linear
+            {\bf Activation:} relu \newline
+            {\bf Kernel Size:} [3, 3] \newline
+            {\bf Stride:} [1, 1] \newline
+            {\bf Dilation:} [1, 1] \newline
+            {\bf Padding:} valid
         &
-        \num{401920}
+        \num{18496}
         &
-        \color{Flatten}{
-            flatten\_2}
+        \color{Conv2D}{
+            conv2d\_1}
         \\
         \hline\\[-1.5ex]
         3
         &
+        \color{MaxPooling2D}{
+        max\_pooling2d\_1}
+        \color{MaxPooling2D}{
+        (MaxPooling2D)}
+        &
+        (12, 12, 64)
+        &
+            {\bf Pool size:} [2, 2] \newline
+            {\bf Strides:} [2, 2] \newline
+            {\bf Padding:} valid
+        &
+        \num{0}
+        &
+        \color{Conv2D}{
+            conv2d\_2}
+        \\
+        \hline\\[-1.5ex]
+        4
+        &
         \color{Dropout}{
-        dropout\_3}
+        dropout\_1}
         \color{Dropout}{
         (Dropout)}
         &
-        (512,)
+        (12, 12, 64)
         &
             {\bf Dropout Rate:} 0.0
         &
         \num{0}
         &
-        \color{Dense}{
-            dense\_3}
-        \\
-        \hline\\[-1.5ex]
-        4
-        &
-        \color{Dense}{
-        dense\_4}
-        \color{Dense}{
-        (Dense)}
-        &
-        (512,)
-        &
-            {\bf \#Neurons:} 512\newline
-            {\bf Activation:} linear
-        &
-        \num{262656}
-        &
-        \color{Dropout}{
-            dropout\_3}
+        \color{MaxPooling2D}{
+            max\_pooling2d\_1}
         \\
         \hline\\[-1.5ex]
         5
         &
+        \color{Flatten}{
+        flatten\_1}
+        \color{Flatten}{
+        (Flatten)}
+        &
+        (9216,)
+        &
+        &
+        \num{0}
+        &
         \color{Dropout}{
-        dropout\_4}
+            dropout\_1}
+        \\
+        \hline\\[-1.5ex]
+        6
+        &
+        \color{Dense}{
+        dense\_1}
+        \color{Dense}{
+        (Dense)}
+        &
+        (128,)
+        &
+            {\bf \#Neurons:} 128\newline
+            {\bf Activation:} relu
+        &
+        \num{1179776}
+        &
+        \color{Flatten}{
+            flatten\_1}
+        \\
+        \hline\\[-1.5ex]
+        7
+        &
+        \color{Dropout}{
+        dropout\_2}
         \color{Dropout}{
         (Dropout)}
         &
-        (512,)
+        (128,)
         &
             {\bf Dropout Rate:} 0.2
         &
         \num{0}
         &
         \color{Dense}{
-            dense\_4}
+            dense\_1}
         \\
         \hline\\[-1.5ex]
-        6
+        8
         &
         \color{Dense}{
-        dense\_5}
+        dense\_2}
         \color{Dense}{
         (Dense)}
         &
@@ -1270,10 +1716,10 @@ table {%
             {\bf \#Neurons:} 10\newline
             {\bf Activation:} softmax
         &
-        \num{5130}
+        \num{1290}
         &
         \color{Dropout}{
-            dropout\_4}
+            dropout\_2}
         \\
         \hline\\[-1.5ex]
 \end{longtable}

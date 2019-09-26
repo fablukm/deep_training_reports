@@ -133,7 +133,9 @@ $\,$\\[-2ex]
     %
     \subsubsection*{Platform}
     \begin{description}
-        \item[Weights exported to path] \VAR{summary['model']['weights_path']}
+        %% if summary['model']['is_saved']
+            \item[Weights exported to path] \VAR{summary['model']['weights_path']}
+        %% endif
         \item[Device used] \VAR{summary['metadata']['training_device']['device_string']}
         \item[CPU] \VAR{summary['metadata']['training_device']['cpu']['brand']},
                    \VAR{summary['metadata']['training_device']['cpu']['arch']}

@@ -61,8 +61,8 @@ class NeuralNetWrapper(object):
             self.config['report']['datetimeformat'])
 
         # save weights if necessary
-        #if self.config['model']['is_saved']:
-        #    self.save_weights()
+        if self.config['model']['is_saved']:
+            self.save_weights()
 
         return
 

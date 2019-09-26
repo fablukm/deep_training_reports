@@ -24,7 +24,7 @@ latex_jinja_env = jinja2.Environment(
 
 def _optimizer_names(keyword):
     dict = {'sgd': "Stochastic Gradient Descent",
-            'rmsprop': "RMSProp",
+            'rmsprop': "RMSProp (Hinton et al. 2014)",
             'adagrad': "AdaGrad (Duchi et al. 2011)",
             'adadelta': "ADADELTA (Zeiler, 2012)",
             'adam': "Adam (Kingma et al., 2015)",
@@ -32,7 +32,6 @@ def _optimizer_names(keyword):
             'nadam': "Nadam (Nesterov-Adam), Dozat, 2016"}
     try:
         out = dict[keyword]
-        print(out)
     except KeyError:
         out = keyword.capitalize()
     return out
@@ -239,12 +238,10 @@ def make_reports(train_log_dir, doc, template_name='template.tex', out_dir='./re
         model_dict['training']['optim_config'] = temp
 
         # rename optimizer
-        print(model_dict['training']['optimizer'])
         try:
             model_dict['training']['optimizer'] = _optimizer_names(model_dict['training']['optimizer'])
         except KeyError:
             pass
-        print(model_dict['training']['optimizer'])
 
         # datetime
         timestamp = datetime.strptime(
