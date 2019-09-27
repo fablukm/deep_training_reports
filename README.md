@@ -30,6 +30,9 @@ The `.pdf` is rendered from a LaTeX template using Jinja2. This means that the t
 
 This repository only contains a __dummy MNIST example__. The generalisation should be straight-forward from this manual, contact me otherwise.
 
+## Requirements
+Apart from Python 3, you need a working `LaTeX`+`pdflatex` installation, e.g. [TeXLive](https://www.tug.org/texlive/)
+
 ## Example
 To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
 
