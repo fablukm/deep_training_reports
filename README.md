@@ -39,10 +39,9 @@ Python packages you will need:
 2. `jinja2`, `json`, `tikzplotlib`, `datetime`, `cpuinfo` for report generation,
 3. `numpy`, `matplotlib`.
 
-## Example
+## Examples (screenshots)
 To provide a working example, this repository contains a minimal LaTeX template and different simple _keras_ models for MNIST. The full report can be found in `reports/report_MNIST.pdf` and `reports/report_MNIST.tex` for the rendered `.tex` file. Hyper-references are included.
 
-### Example screenshots
 Frontpage:
 ---
 ![Frontpage](/example_screenshots/frontpage_example.png "Report frontpage")
