@@ -94,9 +94,9 @@ The following keys are specified therein:
 These jsons have four subsections `data`, `model`, `training`, `report`. For your personal needs, you can add fields as you wish.
 
 #### `data` field
-| Key | Type | Default | Description |
-|-----|---------|---------|-------------|
-|`name`|`str`|no default|Name of your dataset (will appear in report).|
+| Key | Type | Description |
+|-----|---------|-------------|
+|`name`|`str`|Name of your dataset (will appear in report).|
 |`image_size`|list of `int`, length=2|If you work with image data like I do, here is where you specify to what size the inputs will be downsampled.|
 
 #### `model` field
