@@ -91,7 +91,7 @@ The following keys are specified therein:
 |`report_filename`|`"report"`|Filename (without ending) of the rendered `.tex` and `.pdf`.|
 
 ### Configuration of each model `model_configs/X.json`
-These jsons have four subsections `data`, `model`, `training`, `report`. For your personal needs, you can add fields as you wish.
+These jsons currently have four subsections `data`, `model`, `training`, `report`. Working with `.json` is easy, you can add as many fields you want (e.g. `augmentations` or `preprocessing`)
 
 #### `data` field
 | Key | Type | Description |
