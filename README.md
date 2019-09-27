@@ -5,8 +5,7 @@
 
 - [Why](#why)
 - [Requirements](#requirements)
-- [Example](#example)
-    - [Example screenshots](#example-screenshots)
+- [Examples (screenshots)](#examples-screenshots)
 - [Getting started](#getting-started)
 - [Configuration](#configuration)
     - [Configuration of the reporting tool `report_config.json`](#configuration-of-the-reporting-tool-report_configjson)
