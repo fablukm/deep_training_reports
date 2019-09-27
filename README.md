@@ -123,7 +123,7 @@ Depending on how you are parametrising your model and the layers you are using, 
 |`loss`|`str`|Name of the loss function to be used. Custom loss functions can be defined, but must be imported to `nn_wrapper.py`.|
 |`metrics`|list of `str`|The metric _keras_ will use in training ([RTFM](https://keras.io/metrics/)).|
 |`n_epochs`|`int`|Number of epochs.|
-|`batch_size`|`int`|Batch size ([RTFM](https://keras.io/models/sequential/#fit)).|
+|`batch_size`|`int`|Batch size.|
 |`shuffle`|`boolean`|Batches will be reshuffled if set to `true` ([RTFM](https://keras.io/models/sequential/#fit)).|
 
 #### `report` field
