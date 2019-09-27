@@ -2,10 +2,8 @@ import keras
 from tensorflow.python.client import device_lib
 from keras.callbacks import ReduceLROnPlateau
 import os
-import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 import json
 from datetime import datetime
 import cpuinfo
