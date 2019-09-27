@@ -44,16 +44,23 @@ To provide a working example, this repository contains a minimal LaTeX template 
 
 ### Example screenshots
 This is what the frontpage looks like using a blank LaTeX template:
-![Frontpage alt ><](/example_screenshots/frontpage_example.png "Report frontpage")
+
+![Frontpage](/example_screenshots/frontpage_example.png "Report frontpage")
+
 
 This is what the training plots look like using a blank LaTeX template (not the dummy MNIST example implemented in this repo, but one of the models I am testing for other purposes):
-![Training plots alt ><](/example_screenshots/plots_example.png "Training history plots")
+
+![Training plots](/example_screenshots/plots_example.png "Training history plots")
+
 
 This is how the study details get listed using a blank LaTeX template:
-![Study details alt ><](/example_screenshots/details_example.png "Study details")
+
+![Study details](/example_screenshots/details_example.png "Study details")
+
 
 This is how the model architecture gets listed using a blank LaTeX template:
-![Architecture alt ><](/example_screenshots/arch_example.png "Model architecture")
+
+![Architecture](/example_screenshots/arch_example.png "Model architecture")
 
 ## Getting started
 1. Define your _keras_ models in `models.py`.
