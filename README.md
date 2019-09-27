@@ -4,6 +4,7 @@
 <!-- TOC -->
 
 - [Why](#why)
+- [Requirements](#requirements)
 - [Example](#example)
     - [Example screenshots](#example-screenshots)
 - [Getting started](#getting-started)
